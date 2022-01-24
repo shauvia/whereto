@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+    
+    <title>Trip app with weather prediction and map</title>
+  </head>
+  <body>
+    <header>
+      <h1>WHERETO</h1>
+    </header>
+    <main>
+      <div id="tripsDisplay">
+        <section id="newTripDisplay">
+          <h2>Torun</h2>
+          <img src="http://localhost:3000/torun_view.jpg" alt="View of Torun">
+          <div id="flex_container">
+            <p>Weather forecast: Pizga, że uszy odpadają</p>
+            <button id="removeTrip" type="button">Remove</button> 
+          </div>
+        </section>
+        <section id="tripListDisplay">
+          <h2>List of destinations</h2>
+          <ul>
+            <li>Torun</li>
+            <li>Kreta</li>
+            <li>Saloniki</li>
+          </ul>
+          <button id="addTrip" type="button">Add a Trip</button>
+        </section>
+      </div>
+      <form>
+        <label for="tripPlace" id="labTripPlace">Destination</label>
+        <input type="text" id="tripPlace" name="place" placeholder="Place">
+        <label for="tripStart" id="labTripStart">Start Date</label>
+        <input type="date" id="tripStart" name="trip-start">
+        <label for="tripEnd" id="labTripEnd">End Date</label>
+        <input type="date" id="tripEnd" name="trip-end">
+        <button id="send" type="button">Save this Trip</button> 
+      </form>
+      
+      <section>
+
+      </section>
+
+  </main>
+  <footer>
+    <p>&copy; shauvia</p>
+  </footer>
+
+  </body>
+</html>

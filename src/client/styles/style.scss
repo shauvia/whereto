@@ -1,0 +1,76 @@
+// celeste rgb (178, 247, 236)
+// green yellow crayola rgb (242, 227, 150)
+// lemon yellow crayola rgb(255, 255, 186)
+// platinum rgb(232, 237, 236)
+// lemon meringue rgb(232, 224, 186);
+// baby powder rgb(248, 247, 242)
+
+body {
+  background-color: rgb(249, 245, 220);
+  color:rgb(107, 99, 45);
+  // font-family: 'Cinzel', serif;
+  font-family: 'Julius Sans One', sans-serif;
+}
+
+h1 {
+  // color:rgb(107, 99, 45);
+  color: rgb(85, 165, 153);
+  font-size: 5em;
+  text-align: center;
+  margin-top: 0.7em;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+#tripsDisplay{
+  outline: red solid 1px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  // grid-template-rows: 1;
+  column-gap: 5%;
+  grid-template-areas: 
+   'tld ntd'
+  // width: 40%;
+  // margin: 10em auto 0 auto;
+}
+
+#newTripDisplay{
+  grid-area: ntd;
+}
+
+#tripListDisplay{
+  grid-area: tld;
+}
+
+#newTripDisplay{
+  position: relative;
+  width: 70vw;
+  // margin-left: 15vw;
+  // margin-right: 15vw;
+}
+
+#newTripDisplay h2{
+  position: absolute;
+  // width: 100%;
+  background-color: rgba(231, 231, 121, 0.658)
+  // background-color: rgba(255, 255, 125, 0.658);
+}
+
+#newTripDisplay img {
+  width: 100%;
+  // height: auto;
+}
+
+#newTripDisplay div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-transform: uppercase;
+}
+
+#newTripDisplay p {
+  margin-right: 4vw;
+}
