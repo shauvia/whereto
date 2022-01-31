@@ -1,62 +1,107 @@
-// celeste rgb (178, 247, 236)
-// green yellow crayola rgb (242, 227, 150)
-// lemon yellow crayola rgb(255, 255, 186)
-// platinum rgb(232, 237, 236)
-// lemon meringue rgb(232, 224, 186);
-// baby powder rgb(248, 247, 242)
-
 body {
-  background-color: rgb(249, 245, 220);
+  background-color: rgb(241, 249, 243);
   color:rgb(107, 99, 45);
-  // font-family: 'Cinzel', serif;
-  font-family: 'Julius Sans One', sans-serif;
+  font-family: 'Unica One', cursive;
 }
 
 h1 {
-  // color:rgb(107, 99, 45);
   color: rgb(85, 165, 153);
   font-size: 5em;
   text-align: center;
   margin-top: 0.7em;
+  margin-bottom: 1em;
   font-weight: 700;
+  font-family: 'Nixie One', cursive;
+  text-transform: uppercase;
 }
 
 h2 {
-  font-size: 2em;
+  font-size: 3.2em;
 }
 
-#tripsDisplay{
-  outline: red solid 1px;
+.buttons {
+  background-color: rgb(195, 230, 223); 
+  border: none;
+  color: rgb(43, 20, 20);
+  font-size: 1em;
+  font-family: 'Unica One', cursive;
+  transition-duration: 0.4s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.buttons:hover {
+  background-color: rgb(124, 170, 160); 
+  color: white;
+  cursor: pointer;
+}
+
+.labels {
+  text-align: left;
+  font-size: 2.7em;
+  width: 10em;
+  font-weight: 600;
+}
+
+.tripInputs{
+  background-color: rgb(255, 255, 211);
+  font-family: 'Nixie One', cursive;
+  font-size: 1.1em;
+  border: none; 
+  width: 15em;
+  height: 2.5em;
+  justify-self: end;
+  padding: 0;
+}
+
+#tripsDisplay {
+  background-color: rgb(255, 241, 235);
+  font-family: 'Raleway', sans-serif;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  // grid-template-rows: 1;
   column-gap: 5%;
   grid-template-areas: 
-   'tld ntd'
-  // width: 40%;
-  // margin: 10em auto 0 auto;
+   'tld ntd';
 }
 
-#newTripDisplay{
-  grid-area: ntd;
-}
-
-#tripListDisplay{
+#tripListDisplay {
   grid-area: tld;
+  margin-left: 1vw;
+  color: rgb(35, 85, 73);
 }
 
-#newTripDisplay{
+#newTripDisplay {
+  grid-area: ntd;
   position: relative;
   width: 70vw;
-  // margin-left: 15vw;
-  // margin-right: 15vw;
+  margin-right: 1vw;
 }
 
-#newTripDisplay h2{
+#tripListDisplay li {
+  margin-top: 0.7em;
+  font-size: 1.5em;
+  color: rgb(81, 103, 98);
+  font-weight: 800;
+}
+
+#tripListDisplay h2{
+  font-weight: 500;
+  margin-bottom: 1em;
+  // text-transform: uppercase;
+}
+
+#buttonAddTrip {
+  width: 7em;
+  height: 3em;
+  margin-top: 2.2em;
+}
+
+#newTripDisplay h2 {
   position: absolute;
-  // width: 100%;
-  background-color: rgba(231, 231, 121, 0.658)
-  // background-color: rgba(255, 255, 125, 0.658);
+  background-color: rgba(250, 248, 124, 0.808);
+  color: rgb(66, 61, 24);
+  text-transform: uppercase;
+  padding: 0.3em 0.5em 0.3em 0.5em;
 }
 
 #newTripDisplay img {
@@ -65,12 +110,92 @@ h2 {
 }
 
 #newTripDisplay div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5%;
+  grid-template-areas: 
+   'ntdParagraph ntdParagraph ntdButton';
+}
+
+#newTripDisplay ul {
+  grid-area: ntdParagraph;
+  margin-top: 1em;
+  margin-right: 1em;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  text-transform: uppercase;
 }
 
-#newTripDisplay p {
-  margin-right: 4vw;
+#newTripDisplay li {
+  padding-top: 1em;
+  padding-right: 2em;
+  font-size: 1.3em;
+  text-transform: uppercase;
+  font-weight: 900;
 }
+
+#buttonRemoveTrip{
+  grid-area: ntdButton;
+  width: 10em;
+  height: 3em;
+  margin-top: 2em;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(7, auto);
+  grid-template-areas: 
+    'ltp'
+    'tp'
+    'lts'
+    'ts'
+    'lte'
+    'te'
+    'btn';
+  width: 35vw;
+  margin: 5em auto 0 auto;
+  font-family: 'Nixie One', cursive;
+  // background-color: rgb(218, 232, 223);
+  background-color: rgb(243, 238, 251);
+  // background-color: rgb(253, 253, 195);
+}
+
+#labTripPlace{
+  // outline: 1px rgb(25, 209, 40) solid;
+  grid-area: ltp;
+}
+
+#tripPlace {
+  // outline: 1px red solid;
+  grid-area: tp;
+  
+}
+
+#labTripStart {
+  grid-area: lts;
+  margin-top: 1em;
+}
+
+#tripStart {
+  grid-area: ts;
+  
+}
+
+#labTripEnd {
+  grid-area: lte;
+  margin-top: 1em;
+}
+
+#tripEnd {
+  grid-area: te;
+  
+}
+
+#sendButton{
+  grid-area: btn;
+  margin-top: 4em;
+  width: 15em;
+  height: 4em;
+  justify-self: end;
+} 
