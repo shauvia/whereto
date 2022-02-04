@@ -1,0 +1,77 @@
+@media (max-width: 640px){
+  h1 {
+    font-size: 3em;
+  }
+
+  h2 {
+    font-size: 1.8em;
+    font-weight: 600;
+  }
+
+  form {
+    width: 80vw;
+    // margin: 2em auto 0 auto;
+  }
+
+  .labels {
+    justify-self: center;
+    font-size: 1.8em;
+    width: 15em;
+    // font-weight: 600;
+    margin-bottom: 0.5em;
+  }
+
+  .tripInputs{
+    justify-self: center;
+  }
+
+
+
+  #sendButton{
+    justify-self: center;
+  } 
+
+  .weatherForecast{
+    font-weight: 500;
+    
+  }
+  
+  #tripsDisplay {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-template-areas: 
+      'ntd' 
+      'tld';
+    justify-items: center;
+    // width: 70vw;
+  }
+
+  #newTripDisplay div {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      'ntdParagraph1'
+      'ntdParagraph2'
+      'ntdButton';
+  }
+
+  #tripListDisplay{
+    width: 70vw;
+    margin: 3em 0 0 0;
+  }
+
+  #tripListDisplay li {
+    font-size: 1.5em;
+    color:rgb(107, 99, 45);
+    font-weight: 500;
+  }
+  
+  #tripListDisplay h2 {
+    font-weight: 600;
+    color:rgb(107, 99, 45);
+    text-transform: uppercase;
+  }
+
+ 
+}
