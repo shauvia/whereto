@@ -1,28 +1,30 @@
-@media (max-width: 640px){
+@media (max-width: 500px){
   h1 {
     font-size: 3em;
   }
 
   h2 {
-    font-size: 1.8em;
+    font-size: 1.5em;
     font-weight: 600;
   }
 
   form {
-    width: 80vw;
+    width: 100vw;
     // margin: 2em auto 0 auto;
   }
 
   .labels {
     justify-self: center;
+    text-align: center;
     font-size: 1.8em;
-    width: 15em;
+    // width: 15em;
     // font-weight: 600;
     margin-bottom: 0.5em;
   }
 
   .tripInputs{
     justify-self: center;
+    width: 10em;
   }
 
 
