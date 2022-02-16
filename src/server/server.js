@@ -25,11 +25,13 @@ function listening(){
 
 const wetPredict = {
   temp: 25,
-  weather: 'partly cloudy',
-  picture: 'http://localhost:3000/torun_view.jpg'
+  weather: 'partly sunny',
+  image: 'http://localhost:3000/torun_view.jpg',
+  city: ''
 };
 
 app.post('/weatherForecast', function(req, res){
+  wetPredict.city = req.body.location;
   res.send(wetPredict);
 });
 

@@ -16,6 +16,14 @@ function pickingValue(){
   return userInput
 }
 
+function displayResult(result){
+  document.getElementById('temp').innerHTML = result.temp;
+  document.getElementById('weather').innerHTML = result.weather;
+  document.getElementById('img').setAttribute('src', result.image); 
+  console.log('result.image', result.image);
+  document.getElementById('city').innerHTML = result.city;
+}
+
 async function sendRequest(url, uInput){
   let response = await fetch(url, { 
     method: 'POST' , 
@@ -30,19 +38,14 @@ async function sendRequest(url, uInput){
   return content;
 }
 
-function displayInput(result){
-  document.getElementById('temp').innerHTML = result.temp;
-  document.getElementById('weather').innerHTML = result.weather;
-  document.getElementById('img').setAttribute('src', result.image); 
-}
 
-function performAction(event){
+
+async function performAction(event){
   let userInput = pickingValue();
   console.log('some Value', userInput);
-  let weather = sendRequest("http://localhost:3000/weatherForecast", userInput);
+  let weather = await sendRequest("http://localhost:3000/weatherForecast", userInput);
   console.log('weather', weather)
-
-  
+  displayResult(weather);
 }
 
 // wysłać na mój serwer obiekt user Input, dostać z serwera obiekt z info o pogodzie i linkiem i wyświetlić te informacje.
