@@ -22,3 +22,46 @@ function listening(){
   console.log('server runnning');
   console.log(`runnning on localhost ${port}`);
 }
+
+const wetPredict = {
+  temp: 25,
+  weather: 'partly cloudy',
+  picture: 'http://localhost:3000/torun_view.jpg'
+};
+
+app.post('/weatherForecast', function(req, res){
+  res.send(wetPredict);
+});
+
+// dostosować f-cję do przyjęcia informacji od klienta z datą i miejsce i zwrócenia informacji hardkodowanej o temperaturze, prognozie pogody i linku do zdjęcia; wysłąć obkiekt z properties:  temp, prognozie pogody oraz linku do zdjęcia; 
+// app.post("/analysedText", async function(req, res){
+//   console.log("serv-req.body", req.body);
+//   try{
+//     let analysis = await getAnalysis(req.body);
+//     console.log("post-Analysis", analysis);
+//     res.send(analysis);
+//   }catch(error){
+//     if (error.isOutsideApiError) {
+//       res.status(566).send();
+//     } else {
+//     res.status(500).send();
+//     console.log("serv-error", error);
+//     }
+//   }  
+// });
+
+// async function getAnalysis(userInput){
+//   const fixedInput = fixedEncodeURI(userInput);
+//   const response = await fetch(baseURL+fixedInput+apiKey+lang);
+//   console.log("Serv_url: ", baseURL+fixedInput+apiKey+lang);
+//   console.log("Serv-res: ", response);
+//   if (!response.ok){
+//     const errorToThrow = new Error();
+//     errorToThrow.isOutsideApiError = true;
+//     // errorToThrow.message = "Serwer api.meaningcloud.com nie może teraz obsłużyć tego żądania."
+//     throw errorToThrow;
+//   }
+//   const analysis = await response.json(); //oddżejsonowuje
+//   console.log("serv-analysis", analysis);
+//   return analysis;
+// }
