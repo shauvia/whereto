@@ -1,3 +1,5 @@
+const getPicture = require('./apiCalls_server.js');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -23,15 +25,20 @@ function listening(){
   console.log(`runnning on localhost ${port}`);
 }
 
-const wetPredict = {
-  temp: 25,
-  weather: 'partly sunny',
-  image: 'http://localhost:3000/torun_view.jpg',
-  city: ''
-};
 
-app.post('/weatherForecast', function(req, res){
+
+app.post('/weatherForecast', async function(req, res){
+  let wetPredict = {
+    temp: 25,
+    weather: 'partly sunny',
+    image: '',
+    city: ''
+  };
+
+  // image: 'http://localhost:3000/torun_view.jpg',
   wetPredict.city = req.body.location;
+  wetPredict.image = await getPicture(wetPredict.city);
+  console.log('image', wetPredict.image);
   res.send(wetPredict);
 });
 
