@@ -3,7 +3,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const dotenv = require('dotenv');
 dotenv.config();
 
-const baseURL = "https://pixabay.com/api/?url=";
+const baseURL = "https://pixabay.com/api/?";
 const apiKey = "&key=" + process.env.pixabay_API_Key;
 const orientation = "&orientation=horizontal";
 const query = "&q=";
@@ -11,10 +11,10 @@ const query = "&q=";
 
 async function getPicture(inputDestination){
   const response = await fetch(baseURL+apiKey+orientation+query+inputDestination);
-  // console.log("Serv_url: ", baseURL+apiKey+orientation+query+inputDestination);
-  // console.log("Serv-res: ", response);
+  console.log("getPicture_url: ", baseURL+apiKey+orientation+query+inputDestination);
+  console.log("getPicture-res: ", response);
   const content = await response.json(); //oddżejsonowuje
-  console.log("serv-content", content);
+  // console.log("getPicture-content", content);
   console.log('url', content.hits[0].largeImageURL)
   return content.hits[0].webformatURL;
 }

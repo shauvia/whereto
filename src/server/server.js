@@ -1,4 +1,5 @@
 const getPicture = require('./apiCalls_server.js');
+const getGeoCoordinates = require('./geoNames_server.js')
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -38,7 +39,10 @@ app.post('/weatherForecast', async function(req, res){
   // image: 'http://localhost:3000/torun_view.jpg',
   wetPredict.city = req.body.location;
   wetPredict.image = await getPicture(wetPredict.city);
-  console.log('image', wetPredict.image);
+  // console.log('image', wetPredict.image);
+  let geoCoord = await getGeoCoordinates(wetPredict.city);
+  console.log('moj_server_geoCoord', geoCoord);
+
   res.send(wetPredict);
 });
 
