@@ -41,7 +41,6 @@
       'ntd' 
       'tld';
     justify-items: center;
-    // width: 70vw;
   }
 
   #newTripDisplay div {
@@ -50,6 +49,7 @@
     grid-template-areas: 
       'ntdParagraph1'
       'ntdParagraph2'
+      'ntdParagraph3'
       'ntdButton';
   }
 

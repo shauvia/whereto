@@ -1,5 +1,6 @@
 const getPicture = require('./apiCalls_server.js');
-const getGeoCoordinates = require('./geoNames_server.js')
+const getGeoCoordinates = require('./geoNames_server.js');
+const getForecast = require('./weatherbit_server.js');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -30,10 +31,11 @@ function listening(){
 
 app.post('/weatherForecast', async function(req, res){
   let wetPredict = {
-    temp: 25,
-    weather: 'partly sunny',
+    temp: null,
+    weather: '',
     image: '',
-    city: ''
+    city: '',
+    date: ''
   };
 
   // image: 'http://localhost:3000/torun_view.jpg',
@@ -41,10 +43,17 @@ app.post('/weatherForecast', async function(req, res){
   wetPredict.image = await getPicture(wetPredict.city);
   // console.log('image', wetPredict.image);
   let geoCoord = await getGeoCoordinates(wetPredict.city);
-  console.log('moj_server_geoCoord', geoCoord);
+  let forecast = await getForecast(geoCoord.lat, geoCoord.long);
+  wetPredict.temp = forecast.temp;
+  wetPredict.weather = forecast.description;
+  wetPredict.date = forecast.date;
+  // console.log('forecast', forecast);
+  // console.log('moj_server_geoCoord', geoCoord);
 
   res.send(wetPredict);
 });
+
+
 
 // dostosować f-cję do przyjęcia informacji od klienta z datą i miejsce i zwrócenia informacji hardkodowanej o temperaturze, prognozie pogody i linku do zdjęcia; wysłąć obkiekt z properties:  temp, prognozie pogody oraz linku do zdjęcia; 
 // app.post("/analysedText", async function(req, res){

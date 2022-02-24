@@ -8,19 +8,15 @@ function pickingValue(){
     // endDay: dateEnd,
     location: destination
   };
-
-  // console.log("1", userInput.startDay);
-  // console.log('2', userInput.location);
-  // console.log('3', userInput.endDay);
-  // console.log('user input', userInput);
   return userInput
 }
 
 function displayResult(result){
-  document.getElementById('temp').innerHTML = result.temp;
-  document.getElementById('weather').innerHTML = result.weather;
+  document.getElementById('date').innerHTML = 'date: ' + result.date;
+  document.getElementById('temp').innerHTML = 'temp:' + ' ' + result.temp + 'C';
+  document.getElementById('weather').innerHTML = 'weather: ' + result.weather;
   document.getElementById('img').setAttribute('src', result.image); 
-  console.log('result.image', result.image);
+  // console.log('result.image', result.image);
   document.getElementById('city').innerHTML = result.city;
 }
 
@@ -42,9 +38,9 @@ async function sendRequest(url, uInput){
 
 async function performAction(event){
   let userInput = pickingValue();
-  console.log('some Value', userInput);
+  console.log('uInput', userInput);
   let weather = await sendRequest("http://localhost:3000/weatherForecast", userInput);
-  console.log('weather', weather)
+  console.log('weather.date', weather.date)
   displayResult(weather);
 }
 

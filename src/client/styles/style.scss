@@ -33,7 +33,7 @@ footer p{
   font-size: 1.3em;
   text-transform: uppercase;
   font-weight: 900;
-  justify-self: end;
+  justify-self: center;
 }
 
 .buttons {
@@ -128,10 +128,10 @@ footer p{
 
 #newTripDisplay div {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 5%;
   grid-template-areas: 
-   'ntdParagraph1 ntdParagraph2 ntdButton';
+   'ntdParagraph1 ntdParagraph2 ntdParagraph3 ntdButton';
 }
 
 #newTripDisplay div :nth-child(1) {
@@ -142,7 +142,11 @@ footer p{
   grid-area: ntdParagraph2;
 }
 
-#buttonRemoveTrip{
+#newTripDisplay div :nth-child(3) {
+  grid-area: ntdParagraph3;
+}
+
+#buttonRemoveTrip {
   grid-area: ntdButton;
   width: 10em;
   height: 3em;
