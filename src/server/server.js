@@ -31,26 +31,37 @@ function listening(){
 
 app.post('/weatherForecast', async function(req, res){
   let wetPredict = {
-    temp: null,
-    weather: '',
+    temp: 0,
+    weather: 'slonce',
     image: '',
     city: '',
-    date: ''
+    date: '32 13 1984',
+    isNotFound: false
   };
 
-  // image: 'http://localhost:3000/torun_view.jpg',
-  wetPredict.city = req.body.location;
-  wetPredict.image = await getPicture(wetPredict.city);
-  // console.log('image', wetPredict.image);
-  let geoCoord = await getGeoCoordinates(wetPredict.city);
-  let forecast = await getForecast(geoCoord.lat, geoCoord.long);
-  wetPredict.temp = forecast.temp;
-  wetPredict.weather = forecast.description;
-  wetPredict.date = forecast.date;
-  // console.log('forecast', forecast);
-  // console.log('moj_server_geoCoord', geoCoord);
+  try {
 
-  res.send(wetPredict);
+    // image: 'http://localhost:3000/torun_view.jpg',
+    wetPredict.city = req.body.location;
+    wetPredict.image = await getPicture(wetPredict.city);
+    // console.log('image', wetPredict.image);
+    // let geoCoord = await getGeoCoordinates(wetPredict.city);
+    // let forecast = await getForecast(geoCoord.lat, geoCoord.long);
+    // wetPredict.temp = forecast.temp;
+    // wetPredict.weather = forecast.description;
+    // wetPredict.date = forecast.date;
+    // console.log('forecast', forecast);
+    // console.log('moj_server_geoCoord', geoCoord);
+    res.send(wetPredict);
+  } catch(error) {
+      if (error.isNotFound) {
+        wetPredict.isNotFound = true;
+        res.send(wetPredict);
+      } else {
+        res.status(500).send();
+        console.log('Error on the server: ', error);
+      }
+  }
 });
 
 

@@ -14,9 +14,19 @@ async function getPicture(inputDestination){
   console.log("getPicture_url: ", baseURL+apiKey+orientation+query+inputDestination);
   console.log("getPicture-res: ", response);
   const content = await response.json(); //oddżejsonowuje
-  // console.log("getPicture-content", content);
-  console.log('url', content.hits[0].largeImageURL)
-  return content.hits[0].webformatURL;
+  console.log('hits length', content.hits.length);
+  console.log("getPicture-content", content);
+  if (content.hits.length == 0) {
+     errorToThrow = new Error();
+     errorToThrow.isNotFound = true;
+     console.log('error', errorToThrow);
+     throw  errorToThrow;
+  } else {
+    console.log("getPicture-content", content);
+    // console.log('url', content.hits[0].largeImageURL);
+    return content.hits[0].webformatURL;
+  }
+  
 }
 
 module.exports = getPicture; // tu module.exports - eksportowanie funkcji do testowania;

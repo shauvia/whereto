@@ -7,6 +7,7 @@ const apiKey = "&key=" + process.env.weatherbit_API_Key;
 const latApi = 'lat=';
 const longAPi = '&lon='
 const numberOfDays = '&days=2';
+// później ewentualnie zwiększyć ilość dni do 16, bo trzeba bedzie przeiterować przez nie, aby znaleźć właściwą date i zwrócić użytkownikowi właściwą datę i prognozę pogody 
 
 async function getForecast(lat, long){
   const response = await fetch(baseURL+latApi+lat+longAPi+long+apiKey+numberOfDays);
@@ -25,9 +26,3 @@ async function getForecast(lat, long){
  
 
 module.exports = getForecast; 
-
-// GET /forecast/daily?lat={lat}&lon={lon}
-
-// https://api.weatherbit.io/v1.0/forecast/daily?key=...&lang=ru&units=S&days=3
-
-// https://api.weatherbit.io/v2.0/current?lat=35.7796&lon=-78.6382&key=API_KEY&include=minutely
