@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const baseURL = "https://pixabay.com/api/?";
-const apiKey = "&key=" + process.env.pixabay_API_Key;
+const apiKey = "&key=3" + process.env.pixabay_API_Key;
 const orientation = "&orientation=horizontal";
 const query = "&q=";
 
@@ -13,8 +13,11 @@ async function getPicture(inputDestination){
   const response = await fetch(baseURL+apiKey+orientation+query+inputDestination);
   console.log("getPicture_url: ", baseURL+apiKey+orientation+query+inputDestination);
   console.log("getPicture-res: ", response);
+  if (!response.ok) {
+    const err = new Error(); 
+    throw err;
+  }
   const content = await response.json(); //oddżejsonowuje
-  console.log('hits length', content.hits.length);
   console.log("getPicture-content", content);
   if (content.hits.length == 0) {
      errorToThrow = new Error();

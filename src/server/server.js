@@ -40,8 +40,6 @@ app.post('/weatherForecast', async function(req, res){
   };
 
   try {
-
-    // image: 'http://localhost:3000/torun_view.jpg',
     wetPredict.city = req.body.location;
     wetPredict.image = await getPicture(wetPredict.city);
     // console.log('image', wetPredict.image);
