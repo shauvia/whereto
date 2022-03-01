@@ -36,14 +36,16 @@ app.post('/weatherForecast', async function(req, res){
     image: '',
     city: '',
     date: '32 13 1984',
-    isNotFound: false
+    isNotFound: false,
+    geoCoodinates: ''
   };
 
   try {
     wetPredict.city = req.body.location;
-    wetPredict.image = await getPicture(wetPredict.city);
+    // wetPredict.image = await getPicture(wetPredict.city);
     // console.log('image', wetPredict.image);
-    // let geoCoord = await getGeoCoordinates(wetPredict.city);
+    let geoCoord = await getGeoCoordinates(wetPredict.city);
+    wetPredict.geoCoodinates = geoCoord;
     // let forecast = await getForecast(geoCoord.lat, geoCoord.long);
     // wetPredict.temp = forecast.temp;
     // wetPredict.weather = forecast.description;
@@ -57,7 +59,7 @@ app.post('/weatherForecast', async function(req, res){
         res.send(wetPredict);
       } else {
         res.status(500).send();
-        console.log('Error on the server: ', error);
+        // console.log('Error on the server: ', error);
       }
   }
 });
