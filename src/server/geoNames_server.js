@@ -4,8 +4,8 @@ dotenv.config();
 
 const baseURL = "http://api.geonames.org/searchJSON?";
 const query = "q=";
-const maxRows = "&maxRows=";
-const apiKey = "&username=1" + process.env.geonames_API_key;
+const maxRows = "&maxRows=1";
+const apiKey = "&username=" + process.env.geonames_API_key;
 
 
 async function getGeoCoordinates(inputDestination){
@@ -13,7 +13,7 @@ async function getGeoCoordinates(inputDestination){
   // console.log("getGeo_url: ", baseURL+query+inputDestination+maxRows+apiKey);
   // console.log("getGeo-res: ", response);
     if (!response.ok) {
-      console.log('response.status: ', response.status, 'response.statusText: ', response.statusText);
+      console.log('geonames, response.status: ', response.status, 'response.statusText: ', response.statusText);
       const err = new Error(); 
       throw err;
     }
@@ -28,7 +28,8 @@ async function getGeoCoordinates(inputDestination){
  } else {
     let geoCoordinates = {
       lat: content.geonames[0].lat,
-      long: content.geonames[0].lng
+      long: content.geonames[0].lng, 
+      country: content.geonames[0].countryName
     };
     return geoCoordinates;
   }

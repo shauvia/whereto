@@ -37,16 +37,31 @@ app.post('/weatherForecast', async function(req, res){
     city: '',
     date: '32 13 1984',
     isNotFound: false,
-    geoCoodinates: ''
+    szerokosc: null,
+    dlugosc: null,
   };
 
   try {
     wetPredict.city = req.body.location;
-    // wetPredict.image = await getPicture(wetPredict.city);
-    // console.log('image', wetPredict.image);
     let geoCoord = await getGeoCoordinates(wetPredict.city);
-    wetPredict.geoCoodinates = geoCoord;
+    wetPredict.image = await getPicture(wetPredict.city);
+    console.log('pic1', wetPredict.image, "country: ", geoCoord.country);
+    if (!wetPredict.image && geoCoord.country){
+      wetPredict.image = await getPicture(geoCoord.country);
+      console.log('pic2', wetPredict.image);
+    }
+    if (!wetPredict.image) {
+      wetPredict.isNotFound = true;
+      res.send(wetPredict);
+      console.log('pic3', wetPredict.image);
+      return;
+    }
+
+    // console.log('image', wetPredict.image);
+    // wetPredict.szerokosc = geoCoord.lat;
+    // wetPredict.dlugosc = geoCoord.long;
     // let forecast = await getForecast(geoCoord.lat, geoCoord.long);
+    // console.log("forecast", forecast);
     // wetPredict.temp = forecast.temp;
     // wetPredict.weather = forecast.description;
     // wetPredict.date = forecast.date;
@@ -58,8 +73,9 @@ app.post('/weatherForecast', async function(req, res){
         wetPredict.isNotFound = true;
         res.send(wetPredict);
       } else {
+
         res.status(500).send();
-        // console.log('Error on the server: ', error);
+        console.log('Error on the server: ', error);
       }
   }
 });

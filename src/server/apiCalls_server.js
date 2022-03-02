@@ -10,23 +10,23 @@ const query = "&q=";
 
 
 async function getPicture(inputDestination){
+  console.log("inputDestination", inputDestination)
   const response = await fetch(baseURL+apiKey+orientation+query+inputDestination);
   // console.log("getPicture_url: ", baseURL+apiKey+orientation+query+inputDestination);
   // console.log("getPicture-res: ", response);
-  console.log('response.ok', response.ok);
+  // console.log('response.ok', response.ok);
 
   if (!response.ok) {
-    console.log('response.status: ', response.status, 'response.statusText: ', response.statusText);
+    console.log('pixabay, response.status: ', response.status, 'response.statusText: ', response.statusText);
     const err = new Error(); 
     throw err;
   }
   const content = await response.json(); //oddżejsonowuje
-  // console.log("getPicture-content", content);
+  console.log("getPicture-content", content);
   if (content.hits.length == 0) {
-     errorToThrow = new Error();
-     errorToThrow.isNotFound = true;
-    //  console.log('error', errorToThrow);
-     throw  errorToThrow;
+    let picNotFound = null;
+    console.log('picNotFound', picNotFound);
+    return picNotFound;
   } else {
     // console.log("getPicture-content", content);
     // console.log('url', content.hits[0].largeImageURL);
@@ -36,20 +36,3 @@ async function getPicture(inputDestination){
 }
 
 module.exports = getPicture; // tu module.exports - eksportowanie funkcji do testowania;
-
-
-// async function getAnalysis(userInput){
-//   const fixedInput = fixedEncodeURI(userInput);
-//   const response = await fetch(baseURL+fixedInput+apiKey+lang);
-//   console.log("Serv_url: ", baseURL+fixedInput+apiKey+lang);
-//   console.log("Serv-res: ", response);
-//   if (!response.ok){
-//     const errorToThrow = new Error();
-//     errorToThrow.isOutsideApiError = true;
-//     // errorToThrow.message = "Serwer api.meaningcloud.com nie może teraz obsłużyć tego żądania."
-//     throw errorToThrow;
-//   }
-//   const analysis = await response.json(); //oddżejsonowuje
-//   console.log("serv-analysis", analysis);
-//   return analysis;
-// }
