@@ -37,12 +37,11 @@ app.post('/weatherForecast', async function(req, res){
     city: '',
     date: '32 13 1984',
     isNotFound: false,
-    szerokosc: null,
-    dlugosc: null,
   };
 
   try {
     wetPredict.city = req.body.location;
+    let startDay = req.body.startDay;
     let geoCoord = await getGeoCoordinates(wetPredict.city);
     wetPredict.image = await getPicture(wetPredict.city);
     console.log('pic1', wetPredict.image, "country: ", geoCoord.country);
@@ -56,17 +55,12 @@ app.post('/weatherForecast', async function(req, res){
       console.log('pic3', wetPredict.image);
       return;
     }
-
-    // console.log('image', wetPredict.image);
-    // wetPredict.szerokosc = geoCoord.lat;
-    // wetPredict.dlugosc = geoCoord.long;
-    // let forecast = await getForecast(geoCoord.lat, geoCoord.long);
+    let forecast = await getForecast(geoCoord.lat, geoCoord.long, startDay);
     // console.log("forecast", forecast);
-    // wetPredict.temp = forecast.temp;
-    // wetPredict.weather = forecast.description;
-    // wetPredict.date = forecast.date;
+    wetPredict.temp = forecast.temp;
+    wetPredict.weather = forecast.description;
+    wetPredict.date = forecast.date;
     // console.log('forecast', forecast);
-    // console.log('moj_server_geoCoord', geoCoord);
     res.send(wetPredict);
   } catch(error) {
       if (error.isNotFound) {
@@ -81,8 +75,10 @@ app.post('/weatherForecast', async function(req, res){
 });
 
 
+// getForecast zwraca datę i ta date przypisać do properties w wetPredict
 
-// dostosować f-cję do przyjęcia informacji od klienta z datą i miejsce i zwrócenia informacji hardkodowanej o temperaturze, prognozie pogody i linku do zdjęcia; wysłąć obkiekt z properties:  temp, prognozie pogody oraz linku do zdjęcia; 
+
+
 // app.post("/analysedText", async function(req, res){
 //   console.log("serv-req.body", req.body);
 //   try{

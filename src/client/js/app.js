@@ -60,7 +60,7 @@ async function performAction(event){
   
 }
 
-// wysłać na mój serwer obiekt user Input, dostać z serwera obiekt z info o pogodzie i linkiem i wyświetlić te informacje.
+// porównać datę użytkownika do dat, która została zwrócona i jeśli się różnią, to wyświetlić info, że prognoza pogody dla tej daty jest niedostepna
 
 
 // async function getAllData(url, uInput) {

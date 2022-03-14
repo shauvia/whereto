@@ -18,7 +18,7 @@ async function getGeoCoordinates(inputDestination){
       throw err;
     }
   const content = await response.json(); //oddżejsonowuje
-  console.log("getGeo_content", content);
+  // console.log("getGeo_content", content);
 
   if (content.geonames.length == 0) {
     errorToThrow = new Error();

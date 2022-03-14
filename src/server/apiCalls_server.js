@@ -22,10 +22,10 @@ async function getPicture(inputDestination){
     throw err;
   }
   const content = await response.json(); //oddżejsonowuje
-  console.log("getPicture-content", content);
+  // console.log("getPicture-content", content);
   if (content.hits.length == 0) {
     let picNotFound = null;
-    console.log('picNotFound', picNotFound);
+    // console.log('picNotFound', picNotFound);
     return picNotFound;
   } else {
     // console.log("getPicture-content", content);
