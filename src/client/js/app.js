@@ -11,10 +11,18 @@ function pickingValue(){
   return userInput
 }
 
-function displayResult(result){
+function displayResult(result, date){
   if (result.isNotFound){
     document.getElementById('temp').innerHTML = "Location not found";
-  } else {
+  } else if(date != result.date){
+    document.getElementById('unavailable').innerHTML = "Weather forecast is unavailable for provided date range.";
+    document.getElementById('date').innerHTML = 'date: ' + result.date;
+    document.getElementById('temp').innerHTML = 'temp:' + ' ' + result.temp + 'C';
+    document.getElementById('weather').innerHTML = 'weather: ' + result.weather;
+    document.getElementById('img').setAttribute('src', result.image); 
+    // console.log('result.image', result.image);
+    document.getElementById('city').innerHTML = result.city;
+  } else { 
     document.getElementById('date').innerHTML = 'date: ' + result.date;
     document.getElementById('temp').innerHTML = 'temp:' + ' ' + result.temp + 'C';
     document.getElementById('weather').innerHTML = 'weather: ' + result.weather;
@@ -52,7 +60,7 @@ async function performAction(event){
   try {
     let weather = await sendRequest("http://localhost:3000/weatherForecast", userInput);
     console.log('weather.date', weather.date)
-    displayResult(weather);
+    displayResult(weather, userInput.startDay);
   } catch(error){
     displayErrorMessage();
   }
