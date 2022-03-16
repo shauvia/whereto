@@ -20,23 +20,34 @@ app.use(express.static('public'));
 
 const port = 3000;
 
-const server = app.listen(port, listening);
+
 
 function listening(){
   console.log('server runnning');
   console.log(`runnning on localhost ${port}`);
 }
 
+const destinationList = [];
 
+let nextTripID = 0;
+
+app.get('/trips', function(req,res){
+  res.send(destinationList);
+  }
+)
 
 app.post('/weatherForecast', async function(req, res){
   let wetPredict = {
-    temp: 0,
-    weather: 'slonce',
+    temp: null,
+    weather: '',
     image: '',
     city: '',
-    date: '32 13 1984',
+    forecastDate: '',
+    inputStartDate: '',
+    inputEndDate: '',
     isNotFound: false,
+    tripID: -1
+
   };
 
   try {
@@ -44,30 +55,34 @@ app.post('/weatherForecast', async function(req, res){
     let startDay = req.body.startDay;
     let geoCoord = await getGeoCoordinates(wetPredict.city);
     wetPredict.image = await getPicture(wetPredict.city);
-    console.log('pic1', wetPredict.image, "country: ", geoCoord.country);
+    // console.log('pic1', wetPredict.image, "country: ", geoCoord.country);
     if (!wetPredict.image && geoCoord.country){
       wetPredict.image = await getPicture(geoCoord.country);
-      console.log('pic2', wetPredict.image);
+      // console.log('pic2', wetPredict.image);
     }
     if (!wetPredict.image) {
       wetPredict.isNotFound = true;
       res.send(wetPredict);
-      console.log('pic3', wetPredict.image);
+      // console.log('pic3', wetPredict.image);
       return;
     }
     let forecast = await getForecast(geoCoord.lat, geoCoord.long, startDay);
     // console.log("forecast", forecast);
     wetPredict.temp = forecast.temp;
     wetPredict.weather = forecast.description;
-    wetPredict.date = forecast.date;
-    // console.log('forecast', forecast);
+    wetPredict.forecastDate = forecast.date;
+    wetPredict.inputStartDate = req.body.startDay;
+    wetPredict.inputEndDate = req.body.endDay;
+    wetPredict.tripID = nextTripID;
+    nextTripID = nextTripID + 1;
+    destinationList.push(wetPredict);
+    console.log('destinationList', destinationList);
     res.send(wetPredict);
   } catch(error) {
       if (error.isNotFound) {
         wetPredict.isNotFound = true;
         res.send(wetPredict);
-      } else {
-
+      } else { 
         res.status(500).send();
         console.log('Error on the server: ', error);
       }
@@ -75,8 +90,9 @@ app.post('/weatherForecast', async function(req, res){
 });
 
 
-// getForecast zwraca datę i ta date przypisać do properties w wetPredict
+const server = app.listen(port, listening);
 
+// dopisać properties inputStartDate, inputEndDate z info podanego przez użytkownika oraz wepchnąć ten obiekt wetPredict to listy DestinationList przed wysłaniem odpowiedzi do użytkownika.
 
 
 // app.post("/analysedText", async function(req, res){
