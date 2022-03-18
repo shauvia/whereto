@@ -92,37 +92,3 @@ app.post('/weatherForecast', async function(req, res){
 
 const server = app.listen(port, listening);
 
-// dopisać properties inputStartDate, inputEndDate z info podanego przez użytkownika oraz wepchnąć ten obiekt wetPredict to listy DestinationList przed wysłaniem odpowiedzi do użytkownika.
-
-
-// app.post("/analysedText", async function(req, res){
-//   console.log("serv-req.body", req.body);
-//   try{
-//     let analysis = await getAnalysis(req.body);
-//     console.log("post-Analysis", analysis);
-//     res.send(analysis);
-//   }catch(error){
-//     if (error.isOutsideApiError) {
-//       res.status(566).send();
-//     } else {
-//     res.status(500).send();
-//     console.log("serv-error", error);
-//     }
-//   }  
-// });
-
-// async function getAnalysis(userInput){
-//   const fixedInput = fixedEncodeURI(userInput);
-//   const response = await fetch(baseURL+fixedInput+apiKey+lang);
-//   console.log("Serv_url: ", baseURL+fixedInput+apiKey+lang);
-//   console.log("Serv-res: ", response);
-//   if (!response.ok){
-//     const errorToThrow = new Error();
-//     errorToThrow.isOutsideApiError = true;
-//     // errorToThrow.message = "Serwer api.meaningcloud.com nie może teraz obsłużyć tego żądania."
-//     throw errorToThrow;
-//   }
-//   const analysis = await response.json(); //oddżejsonowuje
-//   console.log("serv-analysis", analysis);
-//   return analysis;
-// }

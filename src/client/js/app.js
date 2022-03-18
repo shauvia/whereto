@@ -32,10 +32,31 @@ function displayResult(result, date){
   }
 }
 
-function displayErrorMessage(){
-  // document.getElementById('loading').innerHTML = error;
-  document.getElementById('temp').innerHTML = "Internal Server Error";
+function displayTrips(trips){
+  let ul = document.getElementById('tripList');
+  for( let i = 0; i < trips.length; i++){
+    let li = document.createElement("li");
+    li.innerHTML = trips[i].city;
+    ul.appendChild(li);
+  }
 }
+
+function displayErrorMessage(errorMessage){
+  // document.getElementById('loading').innerHTML = error;
+  document.getElementById('temp').innerHTML = errorMessage; //"Internal Server Error";
+}
+
+function clearTripList(){
+  let ul = document.getElementById('tripList');
+  while (ul.firstChild) { // code from https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild 
+    ul.removeChild(ul.firstChild); 
+  }
+}
+
+function displayNoStringMessage(){
+  document.getElementById('notStringMsg').innerHTML = "Please enter a destination or dates of your trip." 
+}
+
 
 async function getTrips(url){
   let response = await fetch(url, {
@@ -45,7 +66,7 @@ async function getTrips(url){
     }
   });
   let content = await response.json();
-  console.log('list of trips: ', content);
+  
   return content;
 }
 
@@ -65,43 +86,41 @@ async function sendRequest(url, uInput){
 
 
 
+
+window.addEventListener('load', async (event) => {
+  console.log('page is fully loaded');
+  let trips = await getTrips("http://localhost:3000/trips");
+    console.log('list of trips: ', trips);
+    displayTrips(trips)
+});
+
+
+// window.onload = (event) => {
+//   console.log('page is fully loaded');
+// };
+
+
+
 async function performAction(event){
   let userInput = pickingValue();
+  if(!userInput.location || !userInput.startDay || !userInput){
+    displayNoStringMessage();
+    return
+  }
   console.log('uInput', userInput);
   try {
+    clearTripList();
     let weather = await sendRequest("http://localhost:3000/weatherForecast", userInput);
-    console.log('weather.date', weather.date)
     displayResult(weather, userInput.startDay);
-    getTrips("http://localhost:3000/trips");
+    let trips = await getTrips("http://localhost:3000/trips");
+    console.log('list of trips: ', trips);
+    displayTrips(trips);
   } catch(error){
-    displayErrorMessage();
+    console.log("error", error.message);
+    displayErrorMessage(error.message);
   } 
 }
 
-// porównać datę użytkownika do dat, która została zwrócona i jeśli się różnią, to wyświetlić info, że prognoza pogody dla tej daty jest niedostepna
-
-
-// async function getAllData(url, uInput) {
-//   // Wrapping string in an object sis needed when express body-pareser runs with strict=true
-//   let inputWrapper = { txt: uInput };
-//   console.log("Strigified: " + JSON.stringify(inputWrapper));
-//   let response = await fetch(url, { 
-//     method: 'POST' , 
-//     body: JSON.stringify(uInput),
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   }); // domyslnie zapytanie GET
-//   console.log("Fetch returned:", response);
-
-//   checkResponseOk(response);
-
-//   let content = await response.json(); // dobranie sie do tresci jest asynchroniczne, trzeba czekac; .json() oddżejsonowuje
-//   console.log('content', content);
-//   return content;
-//   // jeśli moj server rzuca błędem 500 to rzucić wyjątkiem (throw error/exception) na fetchu z wiadomością statusText: "Internal Server Error"; patrz console.log(fetch returned)
-   
-// }
 
 function initializeForms() {
   document.getElementById('sendButton').addEventListener('click', performAction);
