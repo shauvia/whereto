@@ -23,6 +23,7 @@ h3 {
   font-size: 2em;
   font-family: 'Raleway', sans-serif;
   margin-bottom: 1em;
+  margin-top: 1em;
   text-align: center;
 }
 
@@ -107,6 +108,12 @@ footer p {
   font-size: 1.5em;
   color: rgb(81, 103, 98);
   font-weight: 800;
+}
+
+#tripListDisplay li:hover {
+  // background-color: rgb(124, 170, 160); 
+  color: rgb(0, 182, 142);
+  cursor: pointer;
 }
 
 #tripListDisplay h2{

@@ -37,6 +37,7 @@ function displayTrips(trips){
   for( let i = 0; i < trips.length; i++){
     let li = document.createElement("li");
     li.innerHTML = trips[i].city;
+    li.setAttribute("id", trips[i].tripID);
     ul.appendChild(li);
   }
 }
@@ -56,6 +57,7 @@ function clearTripList(){
 function displayNoStringMessage(){
   document.getElementById('notStringMsg').innerHTML = "Please enter a destination or dates of your trip." 
 }
+
 
 
 async function getTrips(url){
@@ -85,20 +87,12 @@ async function sendRequest(url, uInput){
 }
 
 
-
-
 window.addEventListener('load', async (event) => {
   console.log('page is fully loaded');
   let trips = await getTrips("http://localhost:3000/trips");
     console.log('list of trips: ', trips);
     displayTrips(trips)
 });
-
-
-// window.onload = (event) => {
-//   console.log('page is fully loaded');
-// };
-
 
 
 async function performAction(event){
