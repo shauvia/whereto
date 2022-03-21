@@ -26,7 +26,8 @@ async function getForecast(lat, long, date){
       let forecast = {
         temp: content.data[i].temp,
         description: content.data[i].weather.description,
-        date:   content.data[i].datetime
+        date:   content.data[i].datetime,
+        dateNotFound: false
       }
       return forecast;
     }
@@ -34,7 +35,8 @@ async function getForecast(lat, long, date){
   let forecast = {
     temp: content.data[content.data.length-1].temp,
     description: content.data[content.data.length-1].weather.description,
-    date:   content.data[content.data.length-1].datetime
+    date:   content.data[content.data.length-1].datetime,
+    dateNotFound: true
   }
   // console.log('forecast', forecast);
   return forecast;

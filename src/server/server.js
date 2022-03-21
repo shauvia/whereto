@@ -27,6 +27,8 @@ function listening(){
   console.log(`runnning on localhost ${port}`);
 }
 
+// napisać app.get, który bierze nr wycieczki i zwraca konkretną wycieczkę
+
 const destinationList = [];
 
 let nextTripID = 0;
@@ -35,6 +37,20 @@ app.get('/trips', function(req,res){
   res.send(destinationList);
   }
 )
+
+app.get('/trips/:id', function (req, res){
+  let tripID = req.params.id;
+  for (let i = 0; i < destinationList.length; i++){
+    if (tripID == destinationList[i].tripID){
+      res.send(destinationList[i]);
+    }
+  }
+})
+
+
+exports.book_detail = function(req, res) {
+  res.send('NOT IMPLEMENTED: Book detail: ' + req.params.id);
+};
 
 app.post('/weatherForecast', async function(req, res){
   let wetPredict = {
@@ -46,6 +62,7 @@ app.post('/weatherForecast', async function(req, res){
     inputStartDate: '',
     inputEndDate: '',
     isNotFound: false,
+    dateNotFound: false,
     tripID: -1
 
   };
@@ -71,6 +88,7 @@ app.post('/weatherForecast', async function(req, res){
     wetPredict.temp = forecast.temp;
     wetPredict.weather = forecast.description;
     wetPredict.forecastDate = forecast.date;
+    wetPredict.dateNotFound = forecast.dateNotFound;
     wetPredict.inputStartDate = req.body.startDay;
     wetPredict.inputEndDate = req.body.endDay;
     wetPredict.tripID = nextTripID;

@@ -1,3 +1,5 @@
+let tripUrl = "http://localhost:3000/trips/";
+
 function pickingValue(){
   const dateStart = document.getElementById('tripStart').value;
   const destination = document.getElementById('tripPlace').value;
@@ -11,10 +13,10 @@ function pickingValue(){
   return userInput
 }
 
-function displayResult(result, date){
+function displayResult(result){
   if (result.isNotFound){
     document.getElementById('temp').innerHTML = "Location not found";
-  } else if(date != result.forecastDate){
+  } else if(result.dateNotFound){
     document.getElementById('unavailable').innerHTML = "Weather forecast is unavailable for provided date range.";
     document.getElementById('date').innerHTML = 'date: ' + result.forecastDate;
     document.getElementById('temp').innerHTML = 'temp:' + ' ' + result.temp + 'C';
@@ -37,7 +39,15 @@ function displayTrips(trips){
   for( let i = 0; i < trips.length; i++){
     let li = document.createElement("li");
     li.innerHTML = trips[i].city;
-    li.setAttribute("id", trips[i].tripID);
+    let tripNum = trips[i].tripID;
+    console.log("Fetching trip ", trips[i], " trip id: ", tripNum);
+    let eventHandler = async (event) => {
+      // console.log("Fetching trip id: ", tripId);
+      await fetchAndDisplayTrip(tripNum);
+
+    };
+    li.addEventListener('click', eventHandler);
+    // li.setAttribute("id", trips[i].tripID);
     ul.appendChild(li);
   }
 }
@@ -58,6 +68,30 @@ function displayNoStringMessage(){
   document.getElementById('notStringMsg').innerHTML = "Please enter a destination or dates of your trip." 
 }
 
+
+
+async function fetchTrip(url, tripNumber){
+  console.log("fetch12", url + tripNumber);
+  let response = await fetch(url + tripNumber, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  console.log("response", response);
+  let content = await response.json();
+  console.log("content", content); 
+  return content;
+}
+
+
+async function fetchAndDisplayTrip(tripNumber){
+  console.log("url", tripUrl, "nr", tripNumber);
+  let oneTrip = await fetchTrip(tripUrl, tripNumber);
+  displayResult(oneTrip);
+
+
+}
 
 
 async function getTrips(url){
@@ -119,5 +153,7 @@ async function performAction(event){
 function initializeForms() {
   document.getElementById('sendButton').addEventListener('click', performAction);
 }
+
+
 
 export {initializeForms};
