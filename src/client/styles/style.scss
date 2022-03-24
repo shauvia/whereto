@@ -69,7 +69,7 @@ footer p {
   font-weight: 600;
 }
 
-.tripInputs{
+.tripInputs {
   background-color: rgb(255, 255, 211);
   font-family: 'Nixie One', cursive;
   font-size: 1.1em;
@@ -84,19 +84,20 @@ footer p {
   background-color: rgb(255, 241, 235);
   font-family: 'Raleway', sans-serif;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 5%;
   grid-template-areas: 
-   'tld ntd';
+   'tld ntd ntd';
 }
 
 #tripListDisplay {
   grid-area: tld;
   margin-left: 1vw;
-  color: rgb(35, 85, 73);
+  color: rgb(35, 85, 73); 
 }
 
 #newTripDisplay {
+  display: none;
   grid-area: ntd;
   position: relative;
   width: 70vw;
@@ -169,6 +170,11 @@ footer p {
   justify-self: end;
 }
 
+#formWrapper {
+  grid-area: ntd;
+  // display: none;
+}
+
 form {
   display: grid;
   grid-template-columns: 1fr;
@@ -182,7 +188,8 @@ form {
     'te'
     'btn';
   width: 35vw;
-  margin: 5em auto 0 auto;
+  margin-right: 1vw;
+  // margin: 5em auto 0 auto;
   font-family: 'Nixie One', cursive;
   background-color: rgb(243, 238, 251);
 }

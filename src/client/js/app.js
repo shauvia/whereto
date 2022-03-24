@@ -87,6 +87,8 @@ async function fetchTrip(url, tripNumber){
 
 async function fetchAndDisplayTrip(tripNumber){
   console.log("url", tripUrl, "nr", tripNumber);
+  addDisplaytoNewTrip();
+  document.getElementById('unavailable').innerHTML = "";
   let oneTrip = await fetchTrip(tripUrl, tripNumber);
   displayResult(oneTrip);
 
@@ -128,6 +130,18 @@ window.addEventListener('load', async (event) => {
     displayTrips(trips)
 });
 
+function addDisplaytoForm(){
+  document.getElementById("formWrapper").style.display = "block";
+  document.getElementById("newTripDisplay").style.display='none';
+}
+
+function addDisplaytoNewTrip(){
+  document.getElementById("formWrapper").style.display = "none";
+  document.getElementById("newTripDisplay").style.display='block';
+}
+
+
+
 
 async function performAction(event){
   let userInput = pickingValue();
@@ -142,6 +156,7 @@ async function performAction(event){
     displayResult(weather, userInput.startDay);
     let trips = await getTrips("http://localhost:3000/trips");
     console.log('list of trips: ', trips);
+    addDisplaytoNewTrip();
     displayTrips(trips);
   } catch(error){
     console.log("error", error.message);
@@ -152,8 +167,22 @@ async function performAction(event){
 
 function initializeForms() {
   document.getElementById('sendButton').addEventListener('click', performAction);
+  document.getElementById('buttonAddTrip').addEventListener('click', addDisplaytoForm);
 }
 
 
 
 export {initializeForms};
+
+// function cleanDisplay(){
+//   document.getElementById('score').innerHTML = "";
+//   document.getElementById('agreement').innerHTML = "";
+//   document.getElementById('userSentence').innerHTML = "";
+//   document.getElementById('errorMsg').innerHTML = "";
+// }
+
+// object.style.display = value
+
+// document.getElementById("myDIV").style.display = "none";
+
+// clean display or remove elements when it comes to displaing form instead of trip and trip information

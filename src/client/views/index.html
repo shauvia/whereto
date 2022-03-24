@@ -19,16 +19,29 @@
     <h3 id="unavailable"></h3>
     <main>
       <div id="tripsDisplay">
-        <section id="newTripDisplay">
-          <h2 id="city">Torun</h2>
-          <img id='img'  alt="View of Torun">
-          <div>  
-            <p id="date" class="weatherForecast">Date:</p>
-            <p id='temp' class="weatherForecast">Temp: 72F</p>
-            <p id='weather' class="weatherForecast">Partly cloudy</p>
-            <button id="buttonRemoveTrip" class="buttons" type="button">Remove This Trip</button> 
-          </div>
-        </section>
+        <!-- <section id=""rightPane> -->
+          <section id="newTripDisplay" >
+            <h2 id="city">Torun</h2>
+            <img id='img'  alt="View of Torun">
+            <div>  
+              <p id="date" class="weatherForecast">Date:</p>
+              <p id='temp' class="weatherForecast">Temp: 72F</p>
+              <p id='weather' class="weatherForecast">Partly cloudy</p>
+              <button id="buttonRemoveTrip" class="buttons" type="button">Remove This Trip</button> 
+            </div>
+          </section>
+          <section id="formWrapper">
+            <form class="form">
+              <label for="tripPlace" id="labTripPlace" class="labels">Destination</label>
+              <input type="text" id="tripPlace" class='tripInputs' name="place" placeholder="Location" >
+              <label for="tripStart" id="labTripStart" class="labels">Start Date</label>
+              <input type="date" id="tripStart" class='tripInputs' name="trip-start">
+              <label for="tripEnd" id="labTripEnd" class="labels">End Date</label>
+              <input type="date" id="tripEnd" class='tripInputs' name="trip-end">
+              <button id="sendButton" class="buttons" type="button">Save This Trip</button> 
+            </form>
+          </section>
+      <!-- </section> -->
         <section id="tripListDisplay">
           <h2>Destinations:</h2>
           <ul id="tripList">
@@ -37,15 +50,7 @@
         </section> 
       </div>
       <h3 id="notStringMsg"></h3>
-      <form class="form">
-        <label for="tripPlace" id="labTripPlace" class="labels">Destination</label>
-        <input type="text" id="tripPlace" class='tripInputs' name="place" placeholder="Location" >
-        <label for="tripStart" id="labTripStart" class="labels">Start Date</label>
-        <input type="date" id="tripStart" class='tripInputs' name="trip-start">
-        <label for="tripEnd" id="labTripEnd" class="labels">End Date</label>
-        <input type="date" id="tripEnd" class='tripInputs' name="trip-end">
-        <button id="sendButton" class="buttons" type="button">Save This Trip</button> 
-      </form>
+      
   </main>
   <footer>
     <p>&copy; shauvia</p>
