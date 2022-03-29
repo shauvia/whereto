@@ -140,6 +140,12 @@ function addDisplaytoNewTrip(){
   document.getElementById("newTripDisplay").style.display='block';
 }
 
+function cleanFrom(){
+  document.getElementById('tripStart').value = '';
+  document.getElementById('tripPlace').value = '';
+  document.getElementById('tripEnd').value = '';
+}
+
 
 
 
@@ -158,6 +164,7 @@ async function performAction(event){
     console.log('list of trips: ', trips);
     addDisplaytoNewTrip();
     displayTrips(trips);
+    cleanFrom();
   } catch(error){
     console.log("error", error.message);
     displayErrorMessage(error.message);
