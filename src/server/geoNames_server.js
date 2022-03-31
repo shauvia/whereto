@@ -14,10 +14,10 @@ async function getGeoCoordinates(inputDestination){
   // console.log("getGeo-res: ", response);
     if (!response.ok) {
       console.log('geonames, response.status: ', response.status, 'response.statusText: ', response.statusText);
-      const err = new Error(); 
+      let err = new Error(); 
       throw err;
     }
-  const content = await response.json(); //oddżejsonowuje
+  let content = await response.json(); //oddżejsonowuje
   // console.log("getGeo_content", content);
 
   if (content.geonames.length == 0) {

@@ -33,6 +33,17 @@ const destinationList = [];
 
 let nextTripID = 0;
 
+app.delete('/trips/:id', function (req, res){
+  let tripID = req.params.id;
+  for (let i = 0; i < destinationList.length; i++){
+    if (tripID == destinationList[i].tripID){
+      destinationList.splice(i, 1);
+      res.send();
+      //  does it need to send something? if not then what with response/content on client side?
+    }
+  }
+})
+
 app.get('/trips', function(req,res){
   res.send(destinationList);
   }
@@ -46,6 +57,8 @@ app.get('/trips/:id', function (req, res){
     }
   }
 })
+
+
 
 
 exports.book_detail = function(req, res) {

@@ -1,4 +1,5 @@
 let tripUrl = "http://localhost:3000/trips/";
+let currentTripNum = -1;
 
 function pickingValue(){
   const dateStart = document.getElementById('tripStart').value;
@@ -44,7 +45,7 @@ function displayTrips(trips){
     let eventHandler = async (event) => {
       // console.log("Fetching trip id: ", tripId);
       await fetchAndDisplayTrip(tripNum);
-
+      
     };
     li.addEventListener('click', eventHandler);
     // li.setAttribute("id", trips[i].tripID);
@@ -90,9 +91,8 @@ async function fetchAndDisplayTrip(tripNumber){
   addDisplaytoNewTrip();
   document.getElementById('unavailable').innerHTML = "";
   let oneTrip = await fetchTrip(tripUrl, tripNumber);
+  currentTripNum = tripNumber;
   displayResult(oneTrip);
-
-
 }
 
 
@@ -146,29 +146,78 @@ function cleanFrom(){
   document.getElementById('tripEnd').value = '';
 }
 
+function disableBtn() {
+  document.getElementById("sendButton").disabled = true; // from https://www.w3schools.com/jsref/prop_pushbutton_disabled.asp
+}
+
+function enableBtn() {
+  document.getElementById("sendButton").disabled = false; //from https://www.w3schools.com/jsref/prop_pushbutton_disabled.asp
+}
+
+async function removeTrip(url, currentTripNum){
+  let response = await fetch(url + currentTripNum, { 
+    method: 'DELETE', 
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  console.log("Fetch returned -client:", response);
+  if (!response.ok) {
+    const err = new Error(); 
+    throw err;
+  }
+}
+
+buttonRemoveTrip.addEventListener('click', async (event) => {
+  try{
+    await removeTrip(tripUrl, currentTripNum);
+    let trips = await getTrips(tripUrl);
+    clearTripList();
+    displayTrips(trips);
+    currentTripNum = -1;
+    addDisplaytoForm();
+
+  } catch (error){
+    displayErrorMessage(error.message);
+  }
+});
+
+function setCursorWait() {
+  document.body.style.cursor = "wait";
+}
+function setCursorDefault() {
+  document.body.style.cursor = "default";
+}
+
 
 
 
 async function performAction(event){
+  
   let userInput = pickingValue();
   if(!userInput.location || !userInput.startDay || !userInput){
     displayNoStringMessage();
     return
   }
+  disableBtn();
+  setCursorWait()
   console.log('uInput', userInput);
   try {
-    clearTripList();
     let weather = await sendRequest("http://localhost:3000/weatherForecast", userInput);
     displayResult(weather, userInput.startDay);
     let trips = await getTrips("http://localhost:3000/trips");
     console.log('list of trips: ', trips);
     addDisplaytoNewTrip();
+    clearTripList();
     displayTrips(trips);
     cleanFrom();
   } catch(error){
     console.log("error", error.message);
     displayErrorMessage(error.message);
-  } 
+  }
+  setCursorDefault() 
+  enableBtn();
+  
 }
 
 
