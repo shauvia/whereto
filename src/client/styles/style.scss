@@ -86,6 +86,8 @@ footer p {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   column-gap: 5%;
+  // width: 80vw;
+  margin: 0 10em 0 10em;
   grid-template-areas: 
    'tld ntd ntd';
 }
@@ -100,7 +102,7 @@ footer p {
   display: none;
   grid-area: ntd;
   position: relative;
-  width: 70vw;
+  // width: 70vw;
   margin-right: 1vw;
 }
 

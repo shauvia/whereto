@@ -190,8 +190,6 @@ function setCursorDefault() {
 }
 
 
-
-
 async function performAction(event){
   
   let userInput = pickingValue();
@@ -211,6 +209,7 @@ async function performAction(event){
     clearTripList();
     displayTrips(trips);
     cleanFrom();
+    currentTripNum = weather.tripID;
   } catch(error){
     console.log("error", error.message);
     displayErrorMessage(error.message);
