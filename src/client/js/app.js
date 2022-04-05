@@ -65,10 +65,13 @@ function clearTripList(){
   }
 }
 
-function displayNoStringMessage(){
+function displayNoInputMessage(){
   document.getElementById('notStringMsg').innerHTML = "Please enter a destination or dates of your trip." 
 }
 
+function clearNoInputMessage(){
+  document.getElementById('notStringMsg').innerHTML = "";
+}
 
 
 async function fetchTrip(url, tripNumber){
@@ -194,7 +197,7 @@ async function performAction(event){
   
   let userInput = pickingValue();
   if(!userInput.location || !userInput.startDay || !userInput){
-    displayNoStringMessage();
+    displayNoInputMessage();
     return
   }
   disableBtn();
@@ -209,6 +212,7 @@ async function performAction(event){
     clearTripList();
     displayTrips(trips);
     cleanFrom();
+    clearNoInputMessage()
     currentTripNum = weather.tripID;
   } catch(error){
     console.log("error", error.message);
