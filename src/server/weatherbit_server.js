@@ -8,7 +8,7 @@ const latApi = 'lat=';
 const longAPi = '&lon='
 const numberOfDays = '&days=16';
 
-async function getForecast(lat, long, date){
+async function getForecastFor16Days(lat, long){
   const response = await fetch(baseURL+latApi+lat+longAPi+long+apiKey+numberOfDays);
   // console.log("getForecast_url: ", baseURL+latApi+lat+longAPi+long+apiKey+numberOfDays);
   // console.log("getForecast-res: ", response);
@@ -19,28 +19,12 @@ async function getForecast(lat, long, date){
     throw err;
   }
   const content = await response.json(); //oddżejsonowuje
-  // console.log('content-bit', content);
+  console.log('16dnipogoda', content);
   // console.log('user date', date);
-  for (i = 0; i < content.data.length; i++){
-    if (date == content.data[i].datetime){
-      let forecast = {
-        temp: content.data[i].temp,
-        description: content.data[i].weather.description,
-        date:   content.data[i].datetime,
-        dateNotFound: false
-      }
-      return forecast;
-    }
-  }
-  let forecast = {
-    temp: content.data[content.data.length-1].temp,
-    description: content.data[content.data.length-1].weather.description,
-    date:   content.data[content.data.length-1].datetime,
-    dateNotFound: true
-  }
-  // console.log('forecast', forecast);
-  return forecast;
+  return content;
+  
 }
- 
-module.exports = getForecast;
+
+
+module.exports = getForecastFor16Days;
 

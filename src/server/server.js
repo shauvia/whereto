@@ -1,6 +1,7 @@
 const getPicture = require('./apiCalls_server.js');
 const getGeoCoordinates = require('./geoNames_server.js');
-const getForecast = require('./weatherbit_server.js');
+const getForecastFor16Days = require('./weatherbit_server.js');
+const returnForecastFor1Day = require('./oneDayForecast_server.js');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -96,7 +97,8 @@ app.post('/weatherForecast', async function(req, res){
       // console.log('pic3', wetPredict.image);
       return;
     }
-    let forecast = await getForecast(geoCoord.lat, geoCoord.long, startDay);
+    let forecastArr = await getForecastFor16Days(geoCoord.lat, geoCoord.long);
+    let forecast = returnForecastFor1Day(forecastArr, startDay);
     // console.log("forecast", forecast);
     wetPredict.temp = forecast.temp;
     wetPredict.weather = forecast.description;
