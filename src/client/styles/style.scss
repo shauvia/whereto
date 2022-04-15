@@ -146,10 +146,10 @@ footer p {
 
 #newTripDisplay div {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   column-gap: 5%;
   grid-template-areas: 
-   'ntdParagraph1 ntdParagraph2 ntdParagraph3 ntdButton';
+   'ntdParagraph1 ntdParagraph2 ntdParagraph3 ntdParagraph4 ntdParagraph5 ntdButton';
 }
 
 #newTripDisplay div :nth-child(1) {
@@ -163,6 +163,15 @@ footer p {
 #newTripDisplay div :nth-child(3) {
   grid-area: ntdParagraph3;
 }
+
+#newTripDisplay div :nth-child(4) {
+  grid-area: ntdParagraph4;
+}
+
+#newTripDisplay div :nth-child(5) {
+  grid-area: ntdParagraph5;
+}
+
 
 #buttonRemoveTrip {
   grid-area: ntdButton;

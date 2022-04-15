@@ -19,21 +19,24 @@ function displayTrip(trip){
     document.getElementById('temp').innerHTML = "Location not found";
   } else if(trip.dateNotFound){
     document.getElementById('unavailable').innerHTML = "Weather forecast is unavailable for provided date range.";
-    document.getElementById('date').innerHTML = 'date: ' + trip.forecastDate;
+    document.getElementById('date').innerHTML = 'forecast date: ' + trip.forecastDate;
     document.getElementById('temp').innerHTML = 'temp:' + ' ' + trip.temp + 'C';
     document.getElementById('weather').innerHTML = 'weather: ' + trip.weather;
     document.getElementById('img').setAttribute('src', trip.image); 
-    // console.log('result.image', result.image);
     document.getElementById('city').innerHTML = trip.city;
+    document.getElementById('start').innerHTML = 'start: ' + trip.inputStartDate;
+    document.getElementById('end').innerHTML = 'end: ' + trip.inputEndDate;
   } else { 
-    document.getElementById('date').innerHTML = 'date: ' + trip.forecastDate;
+    document.getElementById('date').innerHTML = 'Forecast date: ' + trip.forecastDate;
     document.getElementById('temp').innerHTML = 'temp:' + ' ' + trip.temp + 'C';
     document.getElementById('weather').innerHTML = 'weather: ' + trip.weather;
     document.getElementById('img').setAttribute('src', trip.image); 
-    // console.log('result.image', result.image);
     document.getElementById('city').innerHTML = trip.city;
+    document.getElementById('start').innerHTML = 'start: ' + trip.inputStartDate;
+    document.getElementById('end').innerHTML = 'end: ' + trip.inputEndDate;
   }
 }
+
 
 function displayTripList(trips){
   let ul = document.getElementById('tripList');
