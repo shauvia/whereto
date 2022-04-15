@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 function returnForecastFor1Day(content, date){
-  
   for (let i = 0; i < content.data.length; i++){
     if (date == content.data[i].datetime){
       let forecast = {
@@ -21,7 +20,6 @@ function returnForecastFor1Day(content, date){
     date:   content.data[content.data.length-1].datetime,
     dateNotFound: true
   }
-  // console.log('forecast', forecast);
   return forecast;
 }
 

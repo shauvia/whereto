@@ -10,20 +10,16 @@ const apiKey = "&username=" + process.env.geonames_API_key;
 
 async function getGeoCoordinates(inputDestination){
   const response = await fetch(baseURL+query+inputDestination+maxRows+apiKey);
-  // console.log("getGeo_url: ", baseURL+query+inputDestination+maxRows+apiKey);
-  // console.log("getGeo-res: ", response);
     if (!response.ok) {
-      console.log('geonames, response.status: ', response.status, 'response.statusText: ', response.statusText);
-      let err = new Error(); 
+      // console.log('geonames, response.status: ', response.status, 'response.statusText: ', response.statusText);
+      let err = new Error('fetch failed, geonames, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText);
       throw err;
     }
   let content = await response.json(); //oddżejsonowuje
-  // console.log("getGeo_content", content);
 
   if (content.geonames.length == 0) {
     errorToThrow = new Error();
     errorToThrow.isNotFound = true;
-   //  console.log('error', errorToThrow);
     throw  errorToThrow;
  } else {
     let geoCoordinates = {
@@ -33,8 +29,6 @@ async function getGeoCoordinates(inputDestination){
     };
     return geoCoordinates;
   }
-  // console.log('lat', content.geonames[0].lat);
-  // console.log('long', content.geonames[0].lng) 
 }
 
 module.exports = getGeoCoordinates; 

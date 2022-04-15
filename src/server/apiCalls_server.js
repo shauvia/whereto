@@ -10,26 +10,16 @@ const query = "&q=";
 
 
 async function getPicture(inputDestination){
-  console.log("inputDestination", inputDestination)
   const response = await fetch(baseURL+apiKey+orientation+query+inputDestination);
-  // console.log("getPicture_url: ", baseURL+apiKey+orientation+query+inputDestination);
-  // console.log("getPicture-res: ", response);
-  // console.log('response.ok', response.ok);
-
   if (!response.ok) {
-    console.log('pixabay, response.status: ', response.status, 'response.statusText: ', response.statusText);
-    const err = new Error(); 
+    const err = new Error('fetch failed, pixabay, response.status: ' + response.status + ' response.statusText: ' + response.statusText); 
     throw err;
   }
   const content = await response.json(); //oddżejsonowuje
-  // console.log("getPicture-content", content);
   if (content.hits.length == 0) {
     let picNotFound = null;
-    // console.log('picNotFound', picNotFound);
     return picNotFound;
   } else {
-    // console.log("getPicture-content", content);
-    // console.log('url', content.hits[0].largeImageURL);
     return content.hits[0].webformatURL;
   }
   

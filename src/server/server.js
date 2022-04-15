@@ -61,12 +61,7 @@ app.get('/trips/:id', function (req, res){
 
 
 
-
-exports.book_detail = function(req, res) {
-  res.send('NOT IMPLEMENTED: Book detail: ' + req.params.id);
-};
-
-app.post('/weatherForecast', async function(req, res){
+app.post('/trips', async function(req, res){
   let wetPredict = {
     temp: null,
     weather: '',
@@ -78,28 +73,23 @@ app.post('/weatherForecast', async function(req, res){
     isNotFound: false,
     dateNotFound: false,
     tripID: -1
-
   };
 
   try {
     wetPredict.city = req.body.location;
     let startDay = req.body.startDay;
-    let geoCoord = await getGeoCoordinates(wetPredict.city);
-    wetPredict.image = await getPicture(wetPredict.city);
-    // console.log('pic1', wetPredict.image, "country: ", geoCoord.country);
-    if (!wetPredict.image && geoCoord.country){
+    let geoCoord = await getGeoCoordinates(wetPredict.city); // getting geocoordinates
+    wetPredict.image = await getPicture(wetPredict.city); // getting picture
+    if (!wetPredict.image && geoCoord.country){ //if there is no picure found base on user input a request is sent again but with country name  
       wetPredict.image = await getPicture(geoCoord.country);
-      // console.log('pic2', wetPredict.image);
     }
     if (!wetPredict.image) {
       wetPredict.isNotFound = true;
       res.send(wetPredict);
-      // console.log('pic3', wetPredict.image);
       return;
     }
-    let forecastArr = await getForecastFor16Days(geoCoord.lat, geoCoord.long);
-    let forecast = returnForecastFor1Day(forecastArr, startDay);
-    // console.log("forecast", forecast);
+    let forecastArr = await getForecastFor16Days(geoCoord.lat, geoCoord.long); //returns an object with a list of forecast for 16 days
+    let forecast = returnForecastFor1Day(forecastArr, startDay); // returns a forecast for provided user start date or the last day of 16 day forecast 
     wetPredict.temp = forecast.temp;
     wetPredict.weather = forecast.description;
     wetPredict.forecastDate = forecast.date;
@@ -109,7 +99,6 @@ app.post('/weatherForecast', async function(req, res){
     wetPredict.tripID = nextTripID;
     nextTripID = nextTripID + 1;
     destinationList.push(wetPredict);
-    console.log('destinationList', destinationList);
     res.send(wetPredict);
   } catch(error) {
       if (error.isNotFound) {

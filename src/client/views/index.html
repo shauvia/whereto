@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Unica+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@300&display=swap" rel="stylesheet">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <title>Trip app with weather prediction and map</title>
   </head>
@@ -17,6 +16,7 @@
     </header>
     <h3>The weather forecast is available only for 16 days from current date.</h3>
     <h3 id="unavailable"></h3>
+    <h3 id="errorMsg"></h3>
     <main>
       <div id="tripsDisplay">
           <section id="newTripDisplay" >
@@ -54,5 +54,15 @@
   <footer>
     <p>&copy; shauvia</p>
   </footer>
+  <script>
+    // Check that service workers are supported
+    if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
+   </script>
   </body>
+  
 </html>

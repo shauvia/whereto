@@ -58,34 +58,9 @@ const forecast =  {
       isNotFound: false,
       dateNotFound: false,
       tripID: 3
-    }
-  
+    }  
   ]
 };
-
-// function returnForecastFor1Day(content, date){
-  
-//   for (i = 0; i < content.data.length; i++){
-//     if (date == content.data[i].datetime){
-//       let forecast = {
-//         temp: content.data[i].temp,
-//         description: content.data[i].weather.description,
-//         date:   content.data[i].datetime,
-//         dateNotFound: false
-//       }
-//       return forecast;
-//     }
-//   }
-//   let forecast = {
-//     temp: content.data[content.data.length-1].temp,
-//     description: content.data[content.data.length-1].weather.description,
-//     date:   content.data[content.data.length-1].datetime,
-//     dateNotFound: true
-//   }
-//   // console.log('forecast', forecast);
-//   return forecast;
-// }
-
 
 
 describe('the function output to match expected result', () => {
@@ -98,19 +73,3 @@ describe('the function output to match expected result', () => {
     expect(returnForecastFor1Day(forecast, '2022-05-30')).toEqual(expected);
   });
 });
-
-// test('the function fails with an error', () => {
-//   const res= { ok: false, status: 201, statusText: 'Error' };
-//   expect(() => checkResponseOk(res).toThrow(Error));
-// });
-
-// test('there is no I in team', () => {
-//   expect('team').not.toMatch(/I/);
-// });
-
-// test('two plus two is four', () => {
-//   expect(2 + 2).toBe(4);
-// });
-
-// expect([{foo: 'bar'}, {baz: 1}]).toMatchObject([{foo: 'bar'}, {baz: 1}]);
-//   });

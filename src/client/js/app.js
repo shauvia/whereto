@@ -1,7 +1,7 @@
 let tripUrl = "http://localhost:3000/trips/";
 let currentTripNum = -1;
 
-function pickingValue(){
+function gatherUserInput(){
   const dateStart = document.getElementById('tripStart').value;
   const destination = document.getElementById('tripPlace').value;
   const dateEnd = document.getElementById('tripEnd').value;
@@ -14,38 +14,35 @@ function pickingValue(){
   return userInput
 }
 
-function displayResult(result){
-  if (result.isNotFound){
+function displayTrip(trip){
+  if (trip.isNotFound){
     document.getElementById('temp').innerHTML = "Location not found";
-  } else if(result.dateNotFound){
+  } else if(trip.dateNotFound){
     document.getElementById('unavailable').innerHTML = "Weather forecast is unavailable for provided date range.";
-    document.getElementById('date').innerHTML = 'date: ' + result.forecastDate;
-    document.getElementById('temp').innerHTML = 'temp:' + ' ' + result.temp + 'C';
-    document.getElementById('weather').innerHTML = 'weather: ' + result.weather;
-    document.getElementById('img').setAttribute('src', result.image); 
+    document.getElementById('date').innerHTML = 'date: ' + trip.forecastDate;
+    document.getElementById('temp').innerHTML = 'temp:' + ' ' + trip.temp + 'C';
+    document.getElementById('weather').innerHTML = 'weather: ' + trip.weather;
+    document.getElementById('img').setAttribute('src', trip.image); 
     // console.log('result.image', result.image);
-    document.getElementById('city').innerHTML = result.city;
+    document.getElementById('city').innerHTML = trip.city;
   } else { 
-    document.getElementById('date').innerHTML = 'date: ' + result.forecastDate;
-    document.getElementById('temp').innerHTML = 'temp:' + ' ' + result.temp + 'C';
-    document.getElementById('weather').innerHTML = 'weather: ' + result.weather;
-    document.getElementById('img').setAttribute('src', result.image); 
+    document.getElementById('date').innerHTML = 'date: ' + trip.forecastDate;
+    document.getElementById('temp').innerHTML = 'temp:' + ' ' + trip.temp + 'C';
+    document.getElementById('weather').innerHTML = 'weather: ' + trip.weather;
+    document.getElementById('img').setAttribute('src', trip.image); 
     // console.log('result.image', result.image);
-    document.getElementById('city').innerHTML = result.city;
+    document.getElementById('city').innerHTML = trip.city;
   }
 }
 
-function displayTrips(trips){
+function displayTripList(trips){
   let ul = document.getElementById('tripList');
   for( let i = 0; i < trips.length; i++){
     let li = document.createElement("li");
     li.innerHTML = trips[i].city;
     let tripNum = trips[i].tripID;
-    console.log("Fetching trip ", trips[i], " trip id: ", tripNum);
     let eventHandler = async (event) => {
-      // console.log("Fetching trip id: ", tripId);
       await fetchAndDisplayTrip(tripNum);
-      
     };
     li.addEventListener('click', eventHandler);
     // li.setAttribute("id", trips[i].tripID);
@@ -53,16 +50,15 @@ function displayTrips(trips){
   }
 }
 
-function displayErrorMessage(errorMessage){
-  // document.getElementById('loading').innerHTML = error;
-  document.getElementById('temp').innerHTML = errorMessage; //"Internal Server Error";
-}
-
 function clearTripList(){
   let ul = document.getElementById('tripList');
   while (ul.firstChild) { // code from https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild 
     ul.removeChild(ul.firstChild); 
   }
+}
+
+function displayErrorMessage(){
+  document.getElementById('errorMsg').innerHTML = "Internal Server Error";
 }
 
 function displayNoInputMessage(){
@@ -73,72 +69,12 @@ function clearNoInputMessage(){
   document.getElementById('notStringMsg').innerHTML = "";
 }
 
-
-async function fetchTrip(url, tripNumber){
-  console.log("fetch12", url + tripNumber);
-  let response = await fetch(url + tripNumber, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  console.log("response", response);
-  let content = await response.json();
-  console.log("content", content); 
-  return content;
-}
-
-
-async function fetchAndDisplayTrip(tripNumber){
-  console.log("url", tripUrl, "nr", tripNumber);
-  addDisplaytoNewTrip();
-  document.getElementById('unavailable').innerHTML = "";
-  let oneTrip = await fetchTrip(tripUrl, tripNumber);
-  currentTripNum = tripNumber;
-  displayResult(oneTrip);
-}
-
-
-async function getTrips(url){
-  let response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  let content = await response.json();
-  
-  return content;
-}
-
-async function sendRequest(url, uInput){
-  let response = await fetch(url, { 
-    method: 'POST' , 
-    body: JSON.stringify(uInput),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  console.log("Fetch returned -client:", response);
-  let content = await response.json(); // dobranie sie do tresci jest asynchroniczne, trzeba czekac; .json() oddżejsonowuje
-  console.log('content-client', content);
-  return content;
-}
-
-
-window.addEventListener('load', async (event) => {
-  console.log('page is fully loaded');
-  let trips = await getTrips("http://localhost:3000/trips");
-    console.log('list of trips: ', trips);
-    displayTrips(trips)
-});
-
-function addDisplaytoForm(){
+function showForm(){
   document.getElementById("formWrapper").style.display = "block";
   document.getElementById("newTripDisplay").style.display='none';
 }
 
-function addDisplaytoNewTrip(){
+function showTrip(){
   document.getElementById("formWrapper").style.display = "none";
   document.getElementById("newTripDisplay").style.display='block';
 }
@@ -157,34 +93,6 @@ function enableBtn() {
   document.getElementById("sendButton").disabled = false; //from https://www.w3schools.com/jsref/prop_pushbutton_disabled.asp
 }
 
-async function removeTrip(url, currentTripNum){
-  let response = await fetch(url + currentTripNum, { 
-    method: 'DELETE', 
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  console.log("Fetch returned -client:", response);
-  if (!response.ok) {
-    const err = new Error(); 
-    throw err;
-  }
-}
-
-buttonRemoveTrip.addEventListener('click', async (event) => {
-  try{
-    await removeTrip(tripUrl, currentTripNum);
-    let trips = await getTrips(tripUrl);
-    clearTripList();
-    displayTrips(trips);
-    currentTripNum = -1;
-    addDisplaytoForm();
-
-  } catch (error){
-    displayErrorMessage(error.message);
-  }
-});
-
 function setCursorWait() {
   document.body.style.cursor = "wait";
 }
@@ -192,56 +100,131 @@ function setCursorDefault() {
   document.body.style.cursor = "default";
 }
 
+// Fetches
 
-async function performAction(event){
-  
-  let userInput = pickingValue();
+async function fetchTrip(url, tripNumber){
+  let response = await fetch(url + tripNumber, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    let err = new Error('fetch failed, fetchTrip, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText);
+    throw err;
+  }
+  let content = await response.json();
+  return content;
+}
+
+async function getTrips(url){
+  let response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    let err = new Error('fetch failed, getTrips, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText);
+    throw err;
+  }
+  let content = await response.json();
+  return content;
+}
+
+async function addTrip(url, uInput){
+  let response = await fetch(url, { 
+    method: 'POST' , 
+    body: JSON.stringify(uInput),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    let err = new Error('fetch failed, addTrip and get forecast, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText);
+    throw err;
+  }
+  let content = await response.json(); // dobranie sie do tresci jest asynchroniczne, trzeba czekac; .json() oddżejsonowuje
+  return content;
+}
+
+async function removeTrip(url, currentTripNum){
+  let response = await fetch(url + currentTripNum, { 
+    method: 'DELETE', 
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    const err = new Error('fetch failed, removeTrip, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText); 
+    throw err;
+  }
+}
+
+// mixed html and server interactions
+
+async function fetchAndDisplayTrip(tripNumber){
+  console.log("url", tripUrl, "nr", tripNumber);
+  showTrip();
+  document.getElementById('unavailable').innerHTML = "";
+  let oneTrip = await fetchTrip(tripUrl, tripNumber);
+  currentTripNum = tripNumber;
+  displayTrip(oneTrip);
+}
+
+async function saveTripHandler(event) {
+  let userInput = gatherUserInput();
   if(!userInput.location || !userInput.startDay || !userInput){
     displayNoInputMessage();
     return
   }
   disableBtn();
   setCursorWait()
-  console.log('uInput', userInput);
   try {
-    let weather = await sendRequest("http://localhost:3000/weatherForecast", userInput);
-    displayResult(weather, userInput.startDay);
+    let weather = await addTrip("http://localhost:3000/trips", userInput);
+    displayTrip(weather, userInput.startDay);
     let trips = await getTrips("http://localhost:3000/trips");
-    console.log('list of trips: ', trips);
-    addDisplaytoNewTrip();
+    showTrip();
     clearTripList();
-    displayTrips(trips);
+    displayTripList(trips);
     cleanFrom();
     clearNoInputMessage()
     currentTripNum = weather.tripID;
   } catch(error){
     console.log("error", error.message);
-    displayErrorMessage(error.message);
+    displayErrorMessage();
   }
   setCursorDefault() 
   enableBtn();
   
 }
 
+async function removeTripHandler(event) {
+  try{
+    await removeTrip(tripUrl, currentTripNum);
+    let trips = await getTrips(tripUrl);
+    clearTripList();
+    displayTripList(trips);
+    currentTripNum = -1;
+    showForm();
+
+  } catch (error){
+    displayErrorMessage();
+  }
+}
+
+async function loadWindowHandler(event) {
+  let trips = await getTrips("http://localhost:3000/trips");
+    displayTripList(trips)
+}
 
 function initializeForms() {
-  document.getElementById('sendButton').addEventListener('click', performAction);
-  document.getElementById('buttonAddTrip').addEventListener('click', addDisplaytoForm);
+  
+  document.getElementById('buttonAddTrip').addEventListener('click', showForm);
+  buttonRemoveTrip.addEventListener('click', removeTripHandler);
+  window.addEventListener('load', loadWindowHandler);
 }
 
 
-
 export {initializeForms};
-
-// function cleanDisplay(){
-//   document.getElementById('score').innerHTML = "";
-//   document.getElementById('agreement').innerHTML = "";
-//   document.getElementById('userSentence').innerHTML = "";
-//   document.getElementById('errorMsg').innerHTML = "";
-// }
-
-// object.style.display = value
-
-// document.getElementById("myDIV").style.display = "none";
-
-// clean display or remove elements when it comes to displaing form instead of trip and trip information
+export {saveTripHandler};
