@@ -146,15 +146,15 @@ footer p {
 
 #newTripDisplay div {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   column-gap: 5%;
   grid-template-areas: 
-   'ntdParagraph1 ntdParagraph2 ntdParagraph3 ntdParagraph4 ntdParagraph5 ntdButton';
+   'ntdParagraph2 ntdParagraph3 ntdParagraph4 ntdParagraph5 ntdButton';
 }
 
-#newTripDisplay div :nth-child(1) {
-  grid-area: ntdParagraph1;
-}
+// #newTripDisplay div :nth-child(1) {
+//   grid-area: ntdParagraph1;
+// }
 
 #newTripDisplay div :nth-child(2) {
   grid-area: ntdParagraph2;

@@ -52,8 +52,7 @@
   #newTripDisplay div {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-areas: 
-      'ntdParagraph1'
+    grid-template-areas:
       'ntdParagraph2'
       'ntdParagraph3'
       'ntdParagraph4'
