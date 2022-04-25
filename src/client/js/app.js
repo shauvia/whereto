@@ -1,4 +1,7 @@
-let tripUrl = "http://localhost:3000/trips/";
+let tripsApi = "/trips"
+
+const tripUrl = process.env.dev_url || "https://whereto.azurewebsites.net"
+
 let currentTripNum = -1;
 
 function gatherUserInput(){
@@ -103,8 +106,8 @@ function setCursorDefault() {
 
 // Fetches
 
-async function fetchTrip(url, tripNumber){
-  let response = await fetch(url + tripNumber, {
+async function fetchTrip(url, tripsApi, tripNumber){
+  let response = await fetch(url + tripsApi + tripNumber, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -118,8 +121,8 @@ async function fetchTrip(url, tripNumber){
   return content;
 }
 
-async function getTrips(url){
-  let response = await fetch(url, {
+async function getTrips(url, tripsApi){
+  let response = await fetch(url + tripsApi, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -133,8 +136,8 @@ async function getTrips(url){
   return content;
 }
 
-async function addTrip(url, uInput){
-  let response = await fetch(url, { 
+async function addTrip(url, tripsApi, uInput){
+  let response = await fetch(url + tripsApi { 
     method: 'POST' , 
     body: JSON.stringify(uInput),
     headers: {
@@ -149,8 +152,8 @@ async function addTrip(url, uInput){
   return content;
 }
 
-async function removeTrip(url, currentTripNum){
-  let response = await fetch(url + currentTripNum, { 
+async function removeTrip(url, tripsApi, currentTripNum){
+  let response = await fetch(url + tripsApi + currentTripNum, { 
     method: 'DELETE', 
     headers: {
       'Content-Type': 'application/json'
@@ -165,10 +168,10 @@ async function removeTrip(url, currentTripNum){
 // mixed html and server interactions
 
 async function fetchAndDisplayTrip(tripNumber){
-  console.log("url", tripUrl, "nr", tripNumber);
+  console.log("url", tripUrl,  "nr", tripNumber);
   showTrip();
   document.getElementById('unavailable').innerHTML = "";
-  let oneTrip = await fetchTrip(tripUrl, tripNumber);
+  let oneTrip = await fetchTrip(tripUrl, tripsApi, tripNumber);
   currentTripNum = tripNumber;
   displayTrip(oneTrip);
 }
@@ -182,9 +185,9 @@ async function saveTripHandler(event) {
   disableBtn();
   setCursorWait()
   try {
-    let weather = await addTrip("http://localhost:3000/trips", userInput);
+    let weather = await addTrip(tripUrl, tripsApi, userInput);
     displayTrip(weather, userInput.startDay);
-    let trips = await getTrips("http://localhost:3000/trips");
+    let trips = await getTrips(tripUrl, tripsApi);
     showTrip();
     clearTripList();
     displayTripList(trips);
@@ -202,8 +205,8 @@ async function saveTripHandler(event) {
 
 async function removeTripHandler(event) {
   try{
-    await removeTrip(tripUrl, currentTripNum);
-    let trips = await getTrips(tripUrl);
+    await removeTrip(tripUrl, tripsApi currentTripNum);
+    let trips = await getTrips(tripUrl, tripsApi);
     clearTripList();
     displayTripList(trips);
     currentTripNum = -1;
@@ -215,7 +218,7 @@ async function removeTripHandler(event) {
 }
 
 async function loadWindowHandler(event) {
-  let trips = await getTrips("http://localhost:3000/trips");
+  let trips = await getTrips(tripUrl, tripsApi);
     displayTripList(trips)
 }
 
