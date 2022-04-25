@@ -137,7 +137,7 @@ async function getTrips(url, tripsApi){
 }
 
 async function addTrip(url, tripsApi, uInput){
-  let response = await fetch(url + tripsApi { 
+  let response = await fetch(url + tripsApi, { 
     method: 'POST' , 
     body: JSON.stringify(uInput),
     headers: {
@@ -205,7 +205,7 @@ async function saveTripHandler(event) {
 
 async function removeTripHandler(event) {
   try{
-    await removeTrip(tripUrl, tripsApi currentTripNum);
+    await removeTrip(tripUrl, tripsApi, currentTripNum);
     let trips = await getTrips(tripUrl, tripsApi);
     clearTripList();
     displayTripList(trips);
