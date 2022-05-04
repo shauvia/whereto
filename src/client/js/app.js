@@ -1,6 +1,6 @@
-let tripsApi = "/trips"
+let tripsApi = "/trips/"
 
-const tripUrl = process.env.dev_url || "https://whereto.azurewebsites.net"
+const tripUrl = ""; // Empty url means it will call the server that serves the website
 
 let currentTripNum = -1;
 
