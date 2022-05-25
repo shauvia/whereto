@@ -1,7 +1,7 @@
 body {
   background-color: rgb(241, 249, 243);
   color:rgb(107, 99, 45);
-  font-family: 'Unica One', cursive;
+  // font-family: 'Unica One', cursive;
 }
 
 h1 {
@@ -37,7 +37,7 @@ footer p {
   margin-top: 0.7em;
 }
 
-.weatherForecast{
+.weatherForecast {
   margin-top: 2em;
   font-size: 1.3em;
   text-transform: uppercase;
@@ -152,10 +152,6 @@ footer p {
    'ntdParagraph2 ntdParagraph3 ntdParagraph4 ntdParagraph5 ntdButton';
 }
 
-// #newTripDisplay div :nth-child(1) {
-//   grid-area: ntdParagraph1;
-// }
-
 #newTripDisplay div :nth-child(2) {
   grid-area: ntdParagraph2;
 }
@@ -172,7 +168,6 @@ footer p {
   grid-area: ntdParagraph5;
 }
 
-
 #buttonRemoveTrip {
   grid-area: ntdButton;
   width: 10em;
@@ -186,11 +181,11 @@ footer p {
   // display: none;
 }
 
-form {
+#tripForm {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(7, auto);
-  grid-template-areas: 
+  grid-template-areas:
     'ltp'
     'tp'
     'lts'
@@ -229,13 +224,80 @@ form {
 
 #tripEnd {
   grid-area: te;
-  
 }
 
-#sendButton{
+#sendButton {
   grid-area: btn;
   margin-top: 4em;
   width: 15em;
   height: 4em;
   justify-self: end;
-} 
+}
+
+#loginForm {
+  outline: 1px solid red;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, auto);
+  grid-template-areas:
+    'login'
+    'logBtn';
+  width: 20vw;
+  height: 12em;
+  margin: 5em auto 0 auto;
+  // background-color: rgb(255, 232, 204);
+  // background-color: rgb(233, 255, 246);
+  background-color: rgb(232, 244, 255);
+}
+
+#login {
+  margin-top: 2em;
+  grid-area: login;
+  justify-self: center;
+  height: 3em;
+}
+
+#loginButton {
+  grid-area: logBtn;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  width: 10em;
+  height: 2.5em;
+  justify-self: center;
+}
+
+#logoutForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    'lgoutBtn';
+}
+
+#logoutButton {
+  grid-area: lgoutBtn;
+  width: 10em;
+  height: 2.5em;
+  justify-self: center;
+  margin: 5em auto 0 auto;
+}
+
+#createAccForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2,auto);
+  grid-template-areas:
+  'crAccLab'
+  'crAcc';
+  width: 20vw;
+  margin: 5em auto 0 auto;
+  font-family: 'Raleway', sans-serif;
+}
+
+#createAccLabel {
+  grid-area: crAccLab;
+}
+
+#createAccount {
+  grid-area: crAcc;
+}

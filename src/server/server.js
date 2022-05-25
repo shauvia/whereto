@@ -3,6 +3,10 @@ const getGeoCoordinates = require('./geoNames_server.js');
 const getForecastFor16Days = require('./weatherbit_server.js');
 const returnForecastFor1Day = require('./oneDayForecast_server.js');
 
+const storage = require('./storage.js');
+const saveData = storage.saveData;
+const loadData = storage.loadData;
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -30,7 +34,8 @@ function listening(){
 
 // napisać app.get, który bierze nr wycieczki i zwraca konkretną wycieczkę
 
-const destinationList = [];
+let destinationList = [];
+
 
 let nextTripID = 0;
 
@@ -39,6 +44,7 @@ app.delete('/trips/:id', function (req, res){
   for (let i = 0; i < destinationList.length; i++){
     if (tripID == destinationList[i].tripID){
       destinationList.splice(i, 1);
+      saveData(destinationList);
       res.send();
       //  does it need to send something? if not then what with response/content on client side?
     }
@@ -46,6 +52,7 @@ app.delete('/trips/:id', function (req, res){
 })
 
 app.get('/trips', function(req,res){
+  console.log("Sendin grips", destinationList.length);
   res.send(destinationList);
   }
 )
@@ -99,6 +106,7 @@ app.post('/trips', async function(req, res){
     wetPredict.tripID = nextTripID;
     nextTripID = nextTripID + 1;
     destinationList.push(wetPredict);
+    await saveData(destinationList);
     res.send(wetPredict);
   } catch(error) {
       if (error.isNotFound) {
@@ -111,6 +119,7 @@ app.post('/trips', async function(req, res){
   }
 });
 
+destinationList = loadData();
 
 const server = app.listen(port, listening);
 
