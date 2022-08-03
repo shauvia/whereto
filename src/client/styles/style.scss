@@ -234,37 +234,90 @@ footer p {
   justify-self: end;
 }
 
-#loginForm {
-  outline: 1px solid red;
+#logOrCreateAcc{
+  //outline: 1px solid green;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(2, auto);
+  column-gap: 5%;
   grid-template-areas:
+    'creAccForm logForm';
+  width: 80vw;  
+  margin: 5em auto 0 auto;
+}
+
+#createAccForm {
+  grid-area: creAccForm;
+  justify-self: start;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3,auto);
+  // grid-row-gap: 1em;
+  grid-template-areas:
+    'crAccLab'
+    'crAcc'
+    'crAccBtn';
+  width: 20vw;
+  // margin: 0 auto 0 auto;
+  font-family: 'Raleway', sans-serif;
+}
+
+#createAccLabel {
+  grid-area: crAccLab;
+}
+
+#createAccount {
+  grid-area: crAcc;
+  margin-top: 2em;
+  height: 3em;
+}
+
+#createAccBtn {
+  grid-area: crAccBtn;
+  margin-top: 1.5em;
+  height: 2.5em;
+
+}
+
+// dorobić button create acc
+
+#loginForm {
+  grid-area: logForm;
+  // outline: 1px solid red;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, auto);
+  grid-template-areas:
+    'logLab'
     'login'
     'logBtn';
   width: 20vw;
-  height: 12em;
-  margin: 5em auto 0 auto;
+  // height: 12em;
+  // margin: 5em auto 0 auto;
   // background-color: rgb(255, 232, 204);
   // background-color: rgb(233, 255, 246);
-  background-color: rgb(232, 244, 255);
+  // background-color: rgb(232, 244, 255);
+  font-family: 'Raleway', sans-serif;
+}
+
+#loginLabel {
+  grid-area: logLab;
 }
 
 #login {
-  margin-top: 2em;
   grid-area: login;
-  justify-self: center;
+  // justify-self: center;
+  margin-top: 2em;
   height: 3em;
 }
 
 #loginButton {
   grid-area: logBtn;
   margin-top: 1.5em;
-  margin-bottom: 1em;
-  width: 10em;
   height: 2.5em;
-  justify-self: center;
+  // justify-self: center;
 }
+
+
 
 #logoutForm {
   display: grid;
@@ -280,24 +333,4 @@ footer p {
   height: 2.5em;
   justify-self: center;
   margin: 5em auto 0 auto;
-}
-
-#createAccForm {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(2,auto);
-  grid-template-areas:
-  'crAccLab'
-  'crAcc';
-  width: 20vw;
-  margin: 5em auto 0 auto;
-  font-family: 'Raleway', sans-serif;
-}
-
-#createAccLabel {
-  grid-area: crAccLab;
-}
-
-#createAccount {
-  grid-area: crAcc;
 }

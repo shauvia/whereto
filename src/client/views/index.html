@@ -51,20 +51,32 @@
         </section> 
       </div>
       <h3 id="notStringMsg"></h3>
+      
+      <div id="logOrCreateAcc">
+        <form id="createAccForm">
+          <label for="createAccount" id="createAccLabel" class="labels">Create your account</label>
+          <input type="text" id="createAccount" class="tripInputs" name="createAccount" placeholder="Enter username">
+          <button id="createAccBtn" class="buttons" type="button">Create Account</button>
+        </form>
 
-      <form id="loginForm">
-        <input type="text" id="login" class="tripInputs" name="logininput" placeholder="Enter your login">
-        <button id="loginButton" class="buttons" type="button">Login</button>
-      </form>
+        <form id="loginForm">
+          <label for="logininput" id="loginLabel" class="labels">Sign in</label>
+          <input type="text" id="login" class="tripInputs" name="logininput" placeholder="Enter your login">
+          <button id="loginButton" class="buttons" type="button">Login</button>
+        </form>
+      </div>
 
       <form id="logoutForm">
         <button id="logoutButton" class="buttons" type="button">Log out</button>
       </form>
 
-      <form id="createAccForm">
-        <label for="createAccount" id="createAccLabel" class="labels">Create your account</label>
-        <input type="text" id="createAccount" class="tripInputs" name="createAccount" placeholder="Enter username" >
-      </form>
+      
+
+      <h5 id="accExists"></h5>
+      <h5 id="tymczasowo"></h5>
+      <h5 id="jestesZalogowana"></h5>
+      <h5 id="jestesLogOut"></h5>
+
 
 
 

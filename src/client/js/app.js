@@ -1,8 +1,13 @@
-let tripsApi = "/trips/"
+const tripsApi = "/trips/"
 
 const tripUrl = ""; // Empty url means it will call the server that serves the website
 
+const accUrl = "/users/"
+
+let userLogin = "";
+
 let currentTripNum = -1;
+
 
 function gatherUserInput(){
   const dateStart = document.getElementById('tripStart').value;
@@ -61,6 +66,11 @@ function clearTripList(){
   }
 }
 
+function clearAndDisplTripList(trips){
+  clearTripList();
+  displayTripList(trips)
+}
+
 function displayErrorMessage(){
   document.getElementById('errorMsg').innerHTML = "Internal Server Error";
 }
@@ -104,10 +114,9 @@ function setCursorDefault() {
   document.body.style.cursor = "default";
 }
 
-// Fetches
 
-async function fetchTrip(url, tripsApi, tripNumber){
-  let response = await fetch(url + tripsApi + tripNumber, {
+async function fetchTrip(url, accountURL, accName, tripsApi, tripNumber){
+  let response = await fetch(url + accountURL + accName + tripsApi + tripNumber, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -121,8 +130,9 @@ async function fetchTrip(url, tripsApi, tripNumber){
   return content;
 }
 
-async function getTrips(url, tripsApi){
-  let response = await fetch(url + tripsApi, {
+async function getTrips(url, accountURL, accName, tripsApi){
+  console.log("url, accountURL, accName, tripsApi", url, accountURL, accName, tripsApi)
+  let response = await fetch(url + accountURL + accName + tripsApi, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -136,8 +146,10 @@ async function getTrips(url, tripsApi){
   return content;
 }
 
-async function addTrip(url, tripsApi, uInput){
-  let response = await fetch(url + tripsApi, { 
+
+async function addTrip(url, accountURL, accName, tripsApi, uInput){
+  console.log("addTrip in SaveTripHandler", url, accountURL, accName, tripsApi, uInput)
+  let response = await fetch(url + accountURL + accName + tripsApi, { 
     method: 'POST' , 
     body: JSON.stringify(uInput),
     headers: {
@@ -152,8 +164,8 @@ async function addTrip(url, tripsApi, uInput){
   return content;
 }
 
-async function removeTrip(url, tripsApi, currentTripNum){
-  let response = await fetch(url + tripsApi + currentTripNum, { 
+async function removeTrip(url, accountURL, accName, tripsApi, currentTripNum){
+  let response = await fetch(url + accountURL + accName + tripsApi + currentTripNum, { 
     method: 'DELETE', 
     headers: {
       'Content-Type': 'application/json'
@@ -171,7 +183,7 @@ async function fetchAndDisplayTrip(tripNumber){
   console.log("url", tripUrl,  "nr", tripNumber);
   showTrip();
   document.getElementById('unavailable').innerHTML = "";
-  let oneTrip = await fetchTrip(tripUrl, tripsApi, tripNumber);
+  let oneTrip = await fetchTrip(tripUrl, accUrl, userLogin, tripsApi, tripNumber);
   currentTripNum = tripNumber;
   displayTrip(oneTrip);
 }
@@ -185,12 +197,12 @@ async function saveTripHandler(event) {
   disableBtn();
   setCursorWait()
   try {
-    let weather = await addTrip(tripUrl, tripsApi, userInput);
+    let weather = await addTrip(tripUrl, accUrl, userLogin, tripsApi, userInput); 
+    // console.log("addTrip in SaveTripHandler", tripUrl, accUrl, userLogin, tripsApi, userInput)
     displayTrip(weather, userInput.startDay);
-    let trips = await getTrips(tripUrl, tripsApi);
+    let trips = await getTrips(tripUrl, accUrl, userLogin, tripsApi);
     showTrip();
-    clearTripList();
-    displayTripList(trips);
+    clearAndDisplTripList(trips);
     cleanFrom();
     clearNoInputMessage()
     currentTripNum = weather.tripID;
@@ -205,10 +217,9 @@ async function saveTripHandler(event) {
 
 async function removeTripHandler(event) {
   try{
-    await removeTrip(tripUrl, tripsApi, currentTripNum);
-    let trips = await getTrips(tripUrl, tripsApi);
-    clearTripList();
-    displayTripList(trips);
+    await removeTrip(tripUrl, accUrl, userLogin, tripsApi, currentTripNum);
+    let trips = await getTrips(tripUrl, accUrl, userLogin, tripsApi);
+    clearAndDisplTripList(trips)
     currentTripNum = -1;
     showForm();
 
@@ -217,18 +228,168 @@ async function removeTripHandler(event) {
   }
 }
 
-async function loadWindowHandler(event) {
-  let trips = await getTrips(tripUrl, tripsApi);
-    displayTripList(trips)
+function loadWindowHandler(event) {
+  showHomePage()
 }
+
+// async function OnLoginHandler(event){
+//   showTripsAndFormOnLogin();
+// }
+
+async function onCreatingAccHAndler(event){
+  showLoginPage()
+}
+
+
+
+
+
+function showHomePage(){
+  document.getElementById("logOrCreateAcc").style.display = "grid";
+  document.getElementById("tripsDisplay").style.display='none';
+  document.getElementById("logoutForm").style.display = 'none';
+}
+
+function showLoginPage(){
+  document.getElementById('loginForm').style.display = "grid";
+  document.getElementById('createAccForm').style.display = 'none';
+  document.getElementById("tripsDisplay").style.display='none';
+  document.getElementById("logoutForm").style.display = 'none';
+}
+
+async function showTripsAndFormOnLogin(){
+  let trips = await getTrips(tripUrl, accUrl, userLogin, tripsApi);
+  clearAndDisplTripList(trips);
+  document.getElementById("logOrCreateAcc").style.display = "none";
+  document.getElementById("tripsDisplay").style.display='grid';
+  showForm();
+  document.getElementById("logoutForm").style.display = 'block';
+}
+
+function cleanLogin(){
+  document.getElementById('login').value = "";
+}
+
+function cleanCreateAccInput(){
+  document.getElementById('createAccount').value = "";
+}
+
+function logOutAcc(){
+  userLogin = ""
+  showHomePage();
+  document.getElementById("logoutForm").style.display = 'none';
+}
+
+function clearDisplayAfterLogOut(){
+  // usunąć wycieczki, i formularz wycieczek i powrócić do strony logowania
+  document.getElementById('jestesZalogowana').innerHTML = ''
+  document.getElementById("jestesLogOut").innerHTML = 'Wylogowałeś się'
+}
+
+
+async function createAcc(tripUrl, accUrl, userAccName){
+  console.log("Creating acc. TripUrl ", tripUrl, "acUrl", accUrl, "userName", userAccName);
+  let response = await fetch(tripUrl + accUrl, {
+    method: 'PUT',
+    body: JSON.stringify(userAccName),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    let err = new Error('fetch failed, createAcc failed, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText);
+    throw err;
+  }
+  let answer = await response.json();
+  return answer;
+}
+
+async function logToAcc(tripUrl, accUrl, accId) {
+  let response = await fetch(tripUrl + accUrl + accId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    let err = new Error('fetch failed, logToAcc failed, response.status: ' +  response.status, ' response.statusText: ' +  response.statusText);
+    throw err;
+  }
+  let content = await response.json();
+  return content;
+}
+
+async function preventInputSendingHandler(event){
+  if (event.key === "Enter") {
+    event.preventDefault();
+    // wsadzić tu funkcję która loguje albo tworzy konto? 
+  }
+}
+
+
+async function createAccountHandler(event){ 
+  let userName = document.getElementById('createAccount').value;
+  console.log("userName: ", userName)
+  let account = await createAcc(tripUrl, accUrl, userName);
+  console.log("tripUrl, accUrl, userName: ", tripUrl, accUrl, userName)
+  console.log("account: ", account);
+  cleanCreateAccInput()
+  if (!account.alreadyCreated){
+    document.getElementById('tymczasowo').innerHTML = 'Wlasnie utworzyliśmy twoje konto. Brawo! A teraz zaloguj sie'  
+    //wyświetlić formularz logowania
+  } else {
+    document.getElementById("accExists").innerHTML = "Account has already been created. Log in to your account and start creating your trips"
+    //wyświetlić formularz logowania
+  }
+  
+};
+
+async function loginToAccHandler(event){
+  let userAccName = document.getElementById('login').value;
+  let accExists = await logToAcc(tripUrl, accUrl, userAccName); //poprawić adres na dwuczłonowy
+  console.log("tripUrl, accUrl, login: ", tripUrl, accUrl, userAccName)
+  cleanLogin()
+  if (!accExists.isCreated){
+    document.getElementById('jestesZalogowana').innerHTML = 'Konto nie istnieje. Utwoz prosze konto.'
+  } else {
+    userLogin = userAccName;
+    console.log("login in else: ", userLogin)
+    document.getElementById('jestesZalogowana').innerHTML = 'Jesteś zalogowana, a tu są twoje fajoskie wycieczki'
+    showTripsAndFormOnLogin();
+    console.log('userLogin in function loginTo:',  userLogin);
+  }
+  
+}
+
+function logOutAndClearDispHandler(event){
+  logOutAcc();
+  console.log('userLogin logout', userLogin);
+  clearDisplayAfterLogOut();
+  currentTripNum = -1;
+}
+
+
+
 
 function initializeForms() {
   
+  window.addEventListener('load', loadWindowHandler);
   document.getElementById('buttonAddTrip').addEventListener('click', showForm);
   buttonRemoveTrip.addEventListener('click', removeTripHandler);
-  window.addEventListener('load', loadWindowHandler);
+  document.getElementById('logOrCreateAcc').addEventListener("keydown", preventInputSendingHandler)
+  document.getElementById('loginForm').addEventListener("keydown", preventInputSendingHandler)
+  document.getElementById('createAccBtn').addEventListener('click', createAccountHandler);
+  document.getElementById('createAccBtn').addEventListener('click', onCreatingAccHAndler); 
+  document.getElementById('loginButton').addEventListener('click',loginToAccHandler);
+  // document.getElementById('loginButton').addEventListener('click', OnLoginHandler);
+  document.getElementById('logoutButton').addEventListener('click', logOutAndClearDispHandler)
 }
+
+// czy mogę mieć event listenera na dwóch eventach dotyczących tego samego przycisku? Np listener na click i na enter?
 
 
 export {initializeForms};
 export {saveTripHandler};
+
+// do zrobienia
+// po wylogowaniu się chcę się ponownie zalogować, i nie utworzono konta, to powinna się pojawić plansza: utwórz konto 
