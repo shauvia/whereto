@@ -280,10 +280,14 @@ function logOutAcc(){
   document.getElementById("logoutForm").style.display = 'none';
 }
 
-function clearDisplayAfterLogOut(){
+function clearLoginLogoutMessages(){
   // usunąć wycieczki, i formularz wycieczek i powrócić do strony logowania
-  document.getElementById('jestesZalogowana').innerHTML = ''
-  document.getElementById("jestesLogOut").innerHTML = 'Wylogowałeś się'
+  document.getElementById('jestesZalogowana').innerHTML = '';
+  document.getElementById("jestesLogOut").innerHTML = '';
+  document.getElementById("emptyAccName").innerHTML = '';
+  document.getElementById("accExists").innerHTML = '';
+  document.getElementById("tymczasowo").innerHTML = '';
+
 }
 
 
@@ -330,31 +334,41 @@ async function preventInputSendingHandler(event){
 async function createAccountHandler(event){ 
   let userName = document.getElementById('createAccount').value;
   console.log("userName: ", userName)
+  if (!userName || userName ==""){
+    clearLoginLogoutMessages();
+    document.getElementById('emptyAccName').innerHTML = 'Account username cannot be empty.'
+    return;
+  }
   let account = await createAcc(tripUrl, accUrl, userName);
   console.log("tripUrl, accUrl, userName: ", tripUrl, accUrl, userName)
   console.log("account: ", account);
   cleanCreateAccInput()
   if (!account.alreadyCreated){
-    document.getElementById('tymczasowo').innerHTML = 'Wlasnie utworzyliśmy twoje konto. Brawo! A teraz zaloguj sie'  
-    //wyświetlić formularz logowania
+    clearLoginLogoutMessages();
+    showHomePage();
+    document.getElementById('tymczasowo').innerHTML = 'Your account ' + userName + ' has been set up.';
+    
   } else {
-    document.getElementById("accExists").innerHTML = "Account has already been created. Log in to your account and start creating your trips"
-    //wyświetlić formularz logowania
+    clearLoginLogoutMessages();
+    document.getElementById("accExists").innerHTML = "You have already created account: " + userName;
+  
   }
   
 };
 
 async function loginToAccHandler(event){
   let userAccName = document.getElementById('login').value;
-  let accExists = await logToAcc(tripUrl, accUrl, userAccName); //poprawić adres na dwuczłonowy
+  let accExists = await logToAcc(tripUrl, accUrl, userAccName);
   console.log("tripUrl, accUrl, login: ", tripUrl, accUrl, userAccName)
   cleanLogin()
   if (!accExists.isCreated){
-    document.getElementById('jestesZalogowana').innerHTML = 'Konto nie istnieje. Utwoz prosze konto.'
+    clearLoginLogoutMessages();
+    document.getElementById('jestesZalogowana').innerHTML = 'Account: ' + userAccName + " doesn't exist. Please create your account."
   } else {
     userLogin = userAccName;
     console.log("login in else: ", userLogin)
-    document.getElementById('jestesZalogowana').innerHTML = 'Jesteś zalogowana, a tu są twoje fajoskie wycieczki'
+    clearLoginLogoutMessages();
+    // document.getElementById('jestesZalogowana').innerHTML = 'Jesteś zalogowana, a tu są twoje fajoskie wycieczki'
     showTripsAndFormOnLogin();
     console.log('userLogin in function loginTo:',  userLogin);
   }
@@ -364,7 +378,7 @@ async function loginToAccHandler(event){
 function logOutAndClearDispHandler(event){
   logOutAcc();
   console.log('userLogin logout', userLogin);
-  clearDisplayAfterLogOut();
+  clearLoginLogoutMessages();
   currentTripNum = -1;
 }
 
@@ -379,7 +393,7 @@ function initializeForms() {
   document.getElementById('logOrCreateAcc').addEventListener("keydown", preventInputSendingHandler)
   document.getElementById('loginForm').addEventListener("keydown", preventInputSendingHandler)
   document.getElementById('createAccBtn').addEventListener('click', createAccountHandler);
-  document.getElementById('createAccBtn').addEventListener('click', onCreatingAccHAndler); 
+  // document.getElementById('createAccBtn').addEventListener('click', onCreatingAccHAndler); 
   document.getElementById('loginButton').addEventListener('click',loginToAccHandler);
   // document.getElementById('loginButton').addEventListener('click', OnLoginHandler);
   document.getElementById('logoutButton').addEventListener('click', logOutAndClearDispHandler)
