@@ -358,6 +358,11 @@ async function createAccountHandler(event){
 
 async function loginToAccHandler(event){
   let userAccName = document.getElementById('login').value;
+  if (!userAccName || userAccName ==""){
+    clearLoginLogoutMessages();
+    document.getElementById('emptyAccName').innerHTML = 'Account username cannot be empty.'
+    return;
+  }
   let accExists = await logToAcc(tripUrl, accUrl, userAccName);
   console.log("tripUrl, accUrl, login: ", tripUrl, accUrl, userAccName)
   cleanLogin()
