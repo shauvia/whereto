@@ -149,7 +149,8 @@ async function getTrips(url, accountURL, accName, tripsApi){
 
 async function addTrip(url, accountURL, accName, tripsApi, uInput){
   console.log("addTrip in SaveTripHandler", url, accountURL, accName, tripsApi, uInput)
-  let response = await fetch(url + accountURL + accName + tripsApi, { 
+  console.log("app.js, addTrip URL: ", url+accountURL+accName+tripsApi)
+  let response = await fetch(url+accountURL+accName+tripsApi, { 
     method: 'POST' , 
     body: JSON.stringify(uInput),
     headers: {

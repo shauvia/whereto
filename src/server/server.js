@@ -3,14 +3,13 @@ const getGeoCoordinates = require('./geoNames_server.js');
 const getForecastFor16Days = require('./weatherbit_server.js');
 const returnForecastFor1Day = require('./oneDayForecast_server.js');
 
-const storage = require('./storage.js');
-const saveData = storage.saveData;
-const loadData = storage.loadData;
+const storage = require('./index.js');
+const saveDataMongo = storage.saveDataMongo;
+const loadDatafromMongo = storage.loadDatafromMongo;
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const travelDatafile = 'travelData.json'
 
 
 const app = express();
@@ -45,7 +44,7 @@ let users = {};
 app.get('/users/:accId/trips', function(req,res){
   let userId = req.params.accId;
   let destinationList = users[userId];
-  console.log("Sendin grips", destinationList.length);
+  console.log("Sending trips", destinationList.length);
   res.send(destinationList);
   }
 )
@@ -67,10 +66,10 @@ app.post('/users/:accId/trips', async function(req, res){
   let userId = req.params.accId;
   console.log("userId", userId);
   let wetPredict = {
+    city: '',
     temp: null,
     weather: '',
     image: '',
-    city: '',
     forecastDate: '',
     inputStartDate: '',
     inputEndDate: '',
@@ -103,7 +102,7 @@ app.post('/users/:accId/trips', async function(req, res){
     wetPredict.tripID = nextTripID;
     nextTripID = nextTripID + 1;
     users[userId].push(wetPredict);
-    await saveData(travelDatafile, users);
+    await saveDataMongo(users);
     res.send(wetPredict);
   } catch(error) {
       if (error.isNotFound) {
@@ -120,13 +119,12 @@ app.post('/users/:accId/trips', async function(req, res){
 app.delete('/users/:accId/trips/:id', function (req, res){
   let tripID = req.params.id;
   let userId = req.params.accId;
-  let destinationList = users[userId];
+  let destinationList = users[userId]; //one user
   for (let i = 0; i < destinationList.length; i++){
     if (tripID == destinationList[i].tripID){
       destinationList.splice(i, 1);
-      saveData(travelDatafile, destinationList);
+      saveDataMongo(users);
       res.send();
-      //  does it need to send something? if not then what with response/content on client side?
     }
   }
 })
@@ -148,7 +146,8 @@ app.put('/users', async function (req, res){
     users[userAccName] = [];
     console.log("users", users)
     console.log("account", users[userAccName])
-    await saveData(travelDatafile, users);
+    // await dataInsertMongo(users)
+    await saveDataMongo(users);
     res.send(accCheck);
   }
 });
@@ -156,6 +155,7 @@ app.put('/users', async function (req, res){
 app.get('/users/:accId', function(req, res){
   let userAcc = req.params.accId;
   console.log('Zczytalo', userAcc)
+  console.log("Users w app.get: ", users);
   let accCheck = {
     isCreated : true
   };
@@ -170,17 +170,17 @@ app.get('/users/:accId', function(req, res){
   }
 });
 
-try{
-  destinationList = loadData(travelDatafile);
-} catch(error) {
-    console.log('Error on the server: ', error, "Unable to read from file destlist");
+
+async function handlingDataLoad(){
+  try {
+    users = await loadDatafromMongo();
+    // console.log("server", users);
+  } catch(error){
+    console.log('Error on the server: ', error, "Unable to read from file userlist");
+  }
 }
 
-try {
-  users = loadData(travelDatafile);
-} catch(error){
-  console.log('Error on the server: ', error, "Unable to read from file userlist");
-}
+handlingDataLoad();
 
 const server = app.listen(port, listening);
 

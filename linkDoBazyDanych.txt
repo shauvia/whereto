@@ -1,0 +1,3 @@
+mongodb+srv://whereto-user:5NrhFwEFtItjQYor@wheretocluster.zfniny4.mongodb.net/?retryWrites=true&w=majority
+
+5NrhFwEFtItjQYor

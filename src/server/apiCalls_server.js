@@ -11,6 +11,7 @@ const query = "&q=";
 
 async function getPicture(inputDestination){
   const response = await fetch(baseURL+apiKey+orientation+query+inputDestination);
+  console.log("Pixabay URL: " , baseURL+apiKey+orientation+query+inputDestination)
   if (!response.ok) {
     const err = new Error('fetch failed, pixabay, response.status: ' + response.status + ' response.statusText: ' + response.statusText); 
     throw err;
