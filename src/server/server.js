@@ -32,27 +32,25 @@ function listening(){
   console.log(`runnning on localhost ${port}`);
 }
 
-// napisać app.get, który bierze nr wycieczki i zwraca konkretną wycieczkę
-
-// let destinationList = [];
-
 let nextTripID = 0;
-let users = {};
+// let users = {};
 
 
 
-app.get('/users/:accId/trips', function(req,res){
+app.get('/users/:accId/trips', async function(req,res){
   let userId = req.params.accId;
-  let destinationList = users[userId];
+  let user = await loadDatafromMongo(userId);
+  let destinationList = user.trips;
   console.log("Sending trips", destinationList.length);
   res.send(destinationList);
   }
 )
 
-app.get('/users/:accId/trips/:id', function (req, res){
+app.get('/users/:accId/trips/:id', async function (req, res){
   let userId = req.params.accId;
   let tripID = req.params.id;
-  let destinationList = users[userId];
+  let user = await loadDatafromMongo(userId);
+  let destinationList = user.trips;
   for (let i = 0; i < destinationList.length; i++){
     if (tripID == destinationList[i].tripID){
       res.send(destinationList[i]);
@@ -63,8 +61,12 @@ app.get('/users/:accId/trips/:id', function (req, res){
 
 
 app.post('/users/:accId/trips', async function(req, res){
+  console.time("AddTripRequest");
   let userId = req.params.accId;
-  console.log("userId", userId);
+  console.time("LoadFromMongo");
+  let user = await loadDatafromMongo(userId);
+  console.timeEnd("LoadFromMongo");
+  let trips = user.trips;
   let wetPredict = {
     city: '',
     temp: null,
@@ -81,7 +83,9 @@ app.post('/users/:accId/trips', async function(req, res){
   try {
     wetPredict.city = req.body.location;
     let startDay = req.body.startDay;
+    console.time("getGeoCoordinates");
     let geoCoord = await getGeoCoordinates(wetPredict.city); // getting geocoordinates
+    console.timeEnd("getGeoCoordinates");
     wetPredict.image = await getPicture(wetPredict.city); // getting picture
     if (!wetPredict.image && geoCoord.country){ //if there is no picure found base on user input a request is sent again but with country name  
       wetPredict.image = await getPicture(geoCoord.country);
@@ -101,8 +105,8 @@ app.post('/users/:accId/trips', async function(req, res){
     wetPredict.inputEndDate = req.body.endDay;
     wetPredict.tripID = nextTripID;
     nextTripID = nextTripID + 1;
-    users[userId].push(wetPredict);
-    await saveDataMongo(users);
+    trips.push(wetPredict);
+    await saveDataMongo(user);
     res.send(wetPredict);
   } catch(error) {
       if (error.isNotFound) {
@@ -113,17 +117,19 @@ app.post('/users/:accId/trips', async function(req, res){
         console.log('Error on the server: ', error);
       }
   }
+  console.timeEnd("AddTripRequest");
 });
 
 
-app.delete('/users/:accId/trips/:id', function (req, res){
+app.delete('/users/:accId/trips/:id', async function (req, res){
   let tripID = req.params.id;
   let userId = req.params.accId;
-  let destinationList = users[userId]; //one user
+  let user = await loadDatafromMongo(userId);
+  let destinationList = user.trips; //list of trips
   for (let i = 0; i < destinationList.length; i++){
     if (tripID == destinationList[i].tripID){
       destinationList.splice(i, 1);
-      saveDataMongo(users);
+      await saveDataMongo(user);
       res.send();
     }
   }
@@ -132,42 +138,41 @@ app.delete('/users/:accId/trips/:id', function (req, res){
 
 app.put('/users', async function (req, res){
   let userAccName = req.body;
-  console.log('Sprawdz', userAccName);
+  let userExists = await loadDatafromMongo(userAccName);
+  console.log("Sprawdzam czy konto istnieje", userExists);
   let accCheck = {
     alreadyCreated : false
   };
-
-  if (userAccName in users) {
-    console.log('Juz jest ', userAccName);
-    accCheck.alreadyCreated = true;
-    console.log('accCheck: ', accCheck)
+  if (!userExists){
+    let user = {
+      _id : userAccName,
+      trips: []
+    }
+    await saveDataMongo(user);
     res.send(accCheck);
   } else {
-    users[userAccName] = [];
-    console.log("users", users)
-    console.log("account", users[userAccName])
-    // await dataInsertMongo(users)
-    await saveDataMongo(users);
+    accCheck.alreadyCreated = true;
+    console.log('Konto już jest ', userAccName);
     res.send(accCheck);
   }
 });
 
-app.get('/users/:accId', function(req, res){
+app.get('/users/:accId', async function(req, res){
   let userAcc = req.params.accId;
+  let userExists = await loadDatafromMongo(userAcc); 
   console.log('Zczytalo', userAcc)
-  console.log("Users w app.get: ", users);
   let accCheck = {
     isCreated : true
   };
-  if (userAcc in users) {
-    console.log('Konto istnieje', userAcc);
-    console.log('accCheck: ', accCheck)
+  if (!userExists){
+    accCheck.isCreated = false;
+    console.log('konto nie istnieje, accCheck: ', accCheck)
     res.send(accCheck);
   } else {
-    accCheck.isCreated = false;
-    console.log('nieistnieje, accCheck: ', accCheck)
+    accCheck.alreadyCreated = true;
+    console.log('Juz jest ', userAcc);
     res.send(accCheck);
-  }
+  }  
 });
 
 
