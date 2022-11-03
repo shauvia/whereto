@@ -3,6 +3,7 @@ const util = require('util');
 const dotenv = require('dotenv');
 dotenv.config();
 
+//poszukać co zrobić jak sie baza danych wykrzaczy. Gdzie wsadzić // await client.close(); ?????
 
 const { MongoClient } = require("mongodb");
 // Replace the uri string with your connection string.
