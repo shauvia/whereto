@@ -6,6 +6,7 @@ const returnForecastFor1Day = require('./oneDayForecast_server.js');
 const storage = require('./index.js');
 const saveDataMongo = storage.saveDataMongo;
 const loadDatafromMongo = storage.loadDatafromMongo;
+let loadOneTrip = storage.loadOneTrip;
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -25,15 +26,12 @@ app.use(express.static('public'));
 
 const port = process.env.PORT || 3000
 
-// wsadzić wszystko w try.. catch i w console.time("AddTripRequest") i console.timeEnd()
+// zrobić ściaganie zdjęcia z pixabay, przycinanie zdjęcia, zapamiętywanie zdjęcia w MongoDB
 
 function listening(){
   console.log('server runnning');
   console.log(`runnning on localhost ${port}`);
 }
-
-let nextTripID = 0;
-// let users = {};
 
 
 
@@ -45,8 +43,8 @@ app.get('/users/:accId/trips', async function(req,res){
     console.log("Sending trips", destinationList.length);
     res.send(destinationList);
   } catch(error){
+    console.log('Error on the server, getting trip list failed: ', error)
     res.status(500).send();
-    console.log('Error on the server, getting trip list failed: ', error, );
   }  
 })
 
@@ -54,16 +52,20 @@ app.get('/users/:accId/trips/:id', async function (req, res){
   try{
     let userId = req.params.accId;
     let tripID = req.params.id;
+    // let oneTrip = await loadOneTrip(userId, tripID);
+    // console.log("Loading one trip: ", oneTrip)
     let user = await loadDatafromMongo(userId);
     let destinationList = user.trips;
     for (let i = 0; i < destinationList.length; i++){
       if (tripID == destinationList[i].tripID){
         res.send(destinationList[i]);
+        break;
       }
     }  
   } catch(error){
+    console.log('Error on the server, retrieving one trip failed: ', error);
     res.status(500).send();
-    console.log('Error on the server, retrieving one trip failed: ', error, );
+    
   }
 })
 
@@ -77,6 +79,7 @@ app.post('/users/:accId/trips', async function(req, res){
     let user = await loadDatafromMongo(userId);
     console.timeEnd("LoadFromMongo");
     let trips = user.trips;
+    let nextTripID = user.nextTripID;
     let wetPredict = {
       city: '',
       temp: null,
@@ -96,7 +99,7 @@ app.post('/users/:accId/trips', async function(req, res){
     console.timeEnd("getGeoCoordinates");
     console.time("getGeoCoordinates");
     wetPredict.image = await getPicture(wetPredict.city); // getting picture
-    console.Console.timeEnd("getGeoCoordinates");
+    console.timeEnd("getGeoCoordinates");
     if (!wetPredict.image && geoCoord.country){ //if there is no picure found base on user input a request is sent again but with country name  
       wetPredict.image = await getPicture(geoCoord.country);
     }
@@ -117,6 +120,8 @@ app.post('/users/:accId/trips', async function(req, res){
     wetPredict.inputEndDate = req.body.endDay;
     wetPredict.tripID = nextTripID;
     nextTripID = nextTripID + 1;
+    user.nextTripID = nextTripID;
+    console.log("nextTripID", nextTripID)
     trips.push(wetPredict);
     await saveDataMongo(user);
     res.send(wetPredict);
@@ -164,7 +169,9 @@ app.put('/users', async function (req, res){
     if (!userExists){
       let user = {
         _id : userAccName,
-        trips: []
+        trips: [],
+        nextTripID: 0,
+
       }
       await saveDataMongo(user);
       res.send(accCheck);
