@@ -58,7 +58,6 @@ async function loadDatafromMongo(userId) {
 let storage = {
   saveDataMongo: saveDataMongo,
   loadDatafromMongo: loadDatafromMongo,
-  loadOneTrip: loadOneTrip
 };
 
 module.exports = storage;

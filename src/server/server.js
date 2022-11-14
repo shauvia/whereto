@@ -6,7 +6,7 @@ const returnForecastFor1Day = require('./oneDayForecast_server.js');
 const storage = require('./index.js');
 const saveDataMongo = storage.saveDataMongo;
 const loadDatafromMongo = storage.loadDatafromMongo;
-let loadOneTrip = storage.loadOneTrip;
+
 
 const express = require('express');
 const bodyParser = require('body-parser');
