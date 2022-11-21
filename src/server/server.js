@@ -1,4 +1,7 @@
-const getPicture = require('./apiCalls_server.js');
+const pictureRetrival = require('./apiCalls_server.js');
+const getPicture = pictureRetrival.getPicture;
+const downloadImage = pictureRetrival.downloadImage;
+const resizeImage = pictureRetrival.resizeImage
 const getGeoCoordinates = require('./geoNames_server.js');
 const getForecastFor16Days = require('./weatherbit_server.js');
 const returnForecastFor1Day = require('./oneDayForecast_server.js');
@@ -32,8 +35,6 @@ function listening(){
   console.log('server runnning');
   console.log(`runnning on localhost ${port}`);
 }
-
-
 
 app.get('/users/:accId/trips', async function(req,res){
   try{
@@ -98,8 +99,10 @@ app.post('/users/:accId/trips', async function(req, res){
     let geoCoord = await getGeoCoordinates(wetPredict.city); // getting geocoordinates
     console.timeEnd("getGeoCoordinates");
     console.time("getGeoCoordinates");
-    wetPredict.image = await getPicture(wetPredict.city); // getting picture
+    wetPredict.image = await getPicture(wetPredict.city); // getting picture, link
     console.timeEnd("getGeoCoordinates");
+    await downloadImage(wetPredict.image, "/userimages/fotka.jpg");
+    await resizeImage();
     if (!wetPredict.image && geoCoord.country){ //if there is no picure found base on user input a request is sent again but with country name  
       wetPredict.image = await getPicture(geoCoord.country);
     }
