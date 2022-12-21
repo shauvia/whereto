@@ -45,15 +45,15 @@ async function  downloadImage(url, filepath) {
   console.log("Udało się zapisać plik", filepath)
 }
 
-async function resizeImage() { // from https://www.digitalocean.com/community/tutorials/how-to-process-images-in-node-js-with-sharp
+async function resizeImage(filepathFrom, filepathTo) { // from https://www.digitalocean.com/community/tutorials/how-to-process-images-in-node-js-with-sharp
   try {
-      await sharp("/userimages/fotka.jpg")
+      await sharp(filepathFrom)
       .resize({
         width: 800,
         height: 600
       })
       .toFormat("jpeg", { mozjpeg: true })
-      .toFile("/userimages/fotkaResized.jpeg");
+      .toFile(filepathTo);
   } catch (error) {
     console.log("resize Image", error);
   }
@@ -61,12 +61,17 @@ async function resizeImage() { // from https://www.digitalocean.com/community/tu
 
 // jak wysyłać bloba do mongo
 
-
+async function createPicture(inputDestination, userId, tripId){
+  let picUrl = await getPicture(inputDestination);
+  let tripImageFilepath = "/userimages/" + userId + "_" + tripId + ".jpeg";
+  let imageResizeFilepath = "/userimages/" + userId + "_" + tripId + "_" + "resized"+ ".jpeg";
+  await downloadImage(picUrl, tripImageFilepath);
+  await resizeImage(tripImageFilepath, imageResizeFilepath)
+  return imageResizeFilepath;
+}
 
 let pictureRetrival = {
-  getPicture: getPicture,
-  downloadImage: downloadImage,
-  resizeImage: resizeImage
+  createPicture: createPicture
 };
 
 

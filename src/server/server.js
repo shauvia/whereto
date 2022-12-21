@@ -1,7 +1,5 @@
 const pictureRetrival = require('./apiCalls_server.js');
-const getPicture = pictureRetrival.getPicture;
-const downloadImage = pictureRetrival.downloadImage;
-const resizeImage = pictureRetrival.resizeImage
+const createPicture = pictureRetrival.createPicture;
 const getGeoCoordinates = require('./geoNames_server.js');
 const getForecastFor16Days = require('./weatherbit_server.js');
 const returnForecastFor1Day = require('./oneDayForecast_server.js');
@@ -29,7 +27,6 @@ app.use(express.static('public'));
 
 const port = process.env.PORT || 3000
 
-// zrobić ściaganie zdjęcia z pixabay, przycinanie zdjęcia, zapamiętywanie zdjęcia w MongoDB
 
 function listening(){
   console.log('server runnning');
@@ -93,18 +90,21 @@ app.post('/users/:accId/trips', async function(req, res){
       dateNotFound: false,
       tripID: -1
     };
+
+    wetPredict.tripID = nextTripID;
+    nextTripID = nextTripID + 1;
+    user.nextTripID = nextTripID;
+    console.log("nextTripID", nextTripID)
     wetPredict.city = req.body.location;
     let startDay = req.body.startDay;
     console.time("getGeoCoordinates");
     let geoCoord = await getGeoCoordinates(wetPredict.city); // getting geocoordinates
     console.timeEnd("getGeoCoordinates");
-    console.time("getGeoCoordinates");
-    wetPredict.image = await getPicture(wetPredict.city); // getting picture, link
-    console.timeEnd("getGeoCoordinates");
-    await downloadImage(wetPredict.image, "/userimages/fotka.jpg");
-    await resizeImage();
+    console.time("createPicture");
+    wetPredict.image = await createPicture(wetPredict.city, userId, wetPredict.tripID); // getting picture, link
+    console.timeEnd("createPicture");
     if (!wetPredict.image && geoCoord.country){ //if there is no picure found base on user input a request is sent again but with country name  
-      wetPredict.image = await getPicture(geoCoord.country);
+      wetPredict.image = await createPicture(wetPredict.country, userId, wetPredict.tripID);
     }
     if (!wetPredict.image) {
       wetPredict.isNotFound = true;
@@ -121,10 +121,8 @@ app.post('/users/:accId/trips', async function(req, res){
     wetPredict.dateNotFound = forecast.dateNotFound;
     wetPredict.inputStartDate = req.body.startDay;
     wetPredict.inputEndDate = req.body.endDay;
-    wetPredict.tripID = nextTripID;
-    nextTripID = nextTripID + 1;
-    user.nextTripID = nextTripID;
-    console.log("nextTripID", nextTripID)
+    
+    
     trips.push(wetPredict);
     await saveDataMongo(user);
     res.send(wetPredict);
