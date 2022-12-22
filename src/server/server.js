@@ -1,3 +1,4 @@
+const fs = require('fs');
 const pictureRetrival = require('./apiCalls_server.js');
 const createPicture = pictureRetrival.createPicture;
 const getGeoCoordinates = require('./geoNames_server.js');
@@ -13,6 +14,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+fs.symlink("/userimages", "img", "dir", (err) => {
+  if (err)
+    console.log(err);
+  else {
+    console.log("\nSymlink created\n");
+  }
+})
 
 const app = express();
 app.use(bodyParser.urlencoded( {extended: false} ));
@@ -21,6 +29,7 @@ app.use(bodyParser.json({strict:false}));
 
 app.use(cors());
 app.use(express.static('dist'));
+app.use(express.static('img'));
 app.use(express.static('public'));
 
 // app.use(express.static('src/client'));

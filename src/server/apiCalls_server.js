@@ -63,11 +63,12 @@ async function resizeImage(filepathFrom, filepathTo) { // from https://www.digit
 
 async function createPicture(inputDestination, userId, tripId){
   let picUrl = await getPicture(inputDestination);
-  let tripImageFilepath = "/userimages/" + userId + "_" + tripId + ".jpeg";
-  let imageResizeFilepath = "/userimages/" + userId + "_" + tripId + "_" + "resized"+ ".jpeg";
+  let tripImageFilepath = "img/" + userId + "_" + tripId + ".jpeg";
+  let imageResizeFilepath = "img/" + userId + "_" + tripId + "_" + "resized"+ ".jpeg";
+  let imagePath = userId + "_" + tripId + "_" + "resized"+ ".jpeg";
   await downloadImage(picUrl, tripImageFilepath);
   await resizeImage(tripImageFilepath, imageResizeFilepath)
-  return imageResizeFilepath;
+  return imagePath;
 }
 
 let pictureRetrival = {
